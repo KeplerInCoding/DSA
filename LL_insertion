@@ -1,0 +1,154 @@
+// #include <stdio.h>
+// #include <stdlib.h>
+
+// struct node
+// {
+//     int data;
+//     struct node *next;
+// };
+// struct node *head;
+
+// void traverse(struct node*);
+// void insert_first(struct node*);
+
+// void main()
+// {
+// 	struct node *second, *last;
+
+//     head= (struct node*)malloc(sizeof(struct node));
+//     second= (struct node*)malloc(sizeof(struct node));
+//     last=  (struct node*)malloc(sizeof(struct node));
+
+//     if(head==NULL || second==NULL || last==NULL)
+//     {
+//         printf("OVERFLOW");
+//         exit(0);
+//     }
+
+//     head->data=11;
+//     head->next=second;
+
+//     second->data=22;
+//     second->next=last;
+
+//     last->data=33;
+//     last->next=NULL;
+
+//     insert_first(head);
+//     traverse(head);
+
+// }
+
+
+// void traverse(struct node* head)
+// {
+//     struct node *temp;
+
+//     if(head==NULL)
+//     exit(0);
+
+//     temp=head;
+//     printf("The elements in linked list are : \n");
+//     while(temp!=NULL)
+//     {
+//         printf("%d ",temp->data);
+//         temp=temp->next;
+//     }
+
+// }
+
+// void insert_first(struct node* head)
+// {
+//     struct node *temp;
+//     temp=(struct node*)malloc(sizeof(struct node));
+
+//     if(temp==NULL)
+//     {
+//         printf("OVERFLOW");
+//         exit(0);
+//     }
+
+//     printf("Enter data: ");
+//     scanf("%d",&temp->data);
+//     temp->next=head;
+//     head=temp;
+// }
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+struct node *head;
+
+void traverse(struct node*);
+struct node* insert_first(struct node*);
+
+void main()
+{
+	struct node *second, *last;
+
+    head= (struct node*)malloc(sizeof(struct node));
+    second= (struct node*)malloc(sizeof(struct node));
+    last=  (struct node*)malloc(sizeof(struct node));
+
+    if(head==NULL || second==NULL || last==NULL)
+    {
+        printf("OVERFLOW");
+        exit(0);
+    }
+
+    head->data=11;
+    head->next=second;
+
+    second->data=22;
+    second->next=last;
+
+    last->data=33;
+    last->next=NULL;
+
+    head= insert_first(head);
+    traverse(head);
+
+}
+
+
+void traverse(struct node* head)
+{
+    struct node *temp;
+
+    if(head==NULL)
+    exit(0);
+
+    temp=head;
+    printf("The elements in linked list are : \n");
+    while(temp!=NULL)
+    {
+        printf("%d ",temp->data);
+        temp=temp->next;
+    }
+
+}
+
+struct node* insert_first(struct node* head)
+{
+    struct node *temp;
+    temp=(struct node*)malloc(sizeof(struct node));
+
+    if(temp==NULL)
+    {
+        printf("OVERFLOW");
+        exit(0);
+    }
+
+    printf("Enter data: ");
+    scanf("%d",&temp->data);
+    temp->next=head;
+    
+    return temp;
+}
