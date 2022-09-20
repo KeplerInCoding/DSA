@@ -1,0 +1,142 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+void search(struct node*);
+struct node* del_first(struct node*);
+void del_last(struct node*);
+void del_any(struct node*);
+void traverse(struct node*);
+
+void main()
+{
+	struct node *head, *second, *last;
+
+    head= (struct node*)malloc(sizeof(struct node));
+    second= (struct node*)malloc(sizeof(struct node));
+    last=  (struct node*)malloc(sizeof(struct node));
+
+    if(head==NULL || second==NULL || last==NULL)
+    {
+        printf("OVERFLOW");
+        exit(0);
+    }
+
+    head->data=11;
+    head->next=second;
+
+    second->data=22;
+    second->next=last;
+
+    last->data=33;
+    last->next=NULL;
+
+    search(head);
+    head= del_first(head);
+    printf("\n");
+    traverse(head);
+    del_last(head);
+    printf("\n");
+    traverse(head);
+    del_any(head);
+    traverse(head);
+
+}
+
+void search(struct node* head)
+{
+    int element;
+    printf("Enter the element to search : ");
+    scanf("%d",&element);
+
+    struct node* temp;
+    int count=1;
+    
+    temp=head;
+    while(temp->data!=element)
+    {
+        ++count;
+        temp=temp->next;
+    }
+    printf("Element found at position : %d",count);
+}
+
+struct node* del_first(struct node* head)
+{
+    struct node* temp;
+
+    if(head==NULL)
+    exit(0);
+    
+    temp=head;
+    head=head->next;
+    free(temp);
+    return head;
+} 
+
+
+void del_last(struct node* head)
+{
+    struct node* temp, *ptr;
+
+    if(head==NULL)
+    exit(0);
+    
+    temp=head;
+
+    while(temp->next!=NULL)
+    {
+        ptr=temp;
+        temp=temp->next;
+    }
+    ptr->next=NULL;
+    free(temp);
+} 
+
+void del_any(struct node* head)
+{
+    struct node* temp, *ptr;
+
+    int count=1, pos;
+
+    printf("Enter position : ");
+    scanf("%d",&pos);
+
+    if(head==NULL)
+    exit(0);
+    
+    temp=head;
+
+    while(count<pos)
+    {
+        ++count;
+        ptr=temp;
+        temp=temp->next;
+    }
+    ptr->next=temp->next;
+    free(temp);
+}
+
+void traverse(struct node* head)
+{
+    struct node *temp;
+
+    if(head==NULL)
+    exit(0);
+
+    temp=head;
+    printf("The elements in linked list are : \n");
+    while(temp!=NULL)
+    {
+        printf("%d ",temp->data);
+        temp=temp->next;
+    }
+
+}
+
+
