@@ -1,0 +1,802 @@
+1.	Write a program to implement queue using arrays.
+
+Sample Input and Output:
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 1
+	Enter element : 23
+	Successfully inserted.
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 1
+	Enter element : 56
+	Successfully inserted.
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 3
+	Elements in the queue : 23 56 
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 4
+	Queue is not empty.
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 5
+	Queue size : 2
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 2
+	Deleted element = 23
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 2
+	Deleted element = 56
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 4
+	Queue is empty.
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 6
+
+
+
+
+Solution: 
+
+//File Name: QueueUsingArray.c
+//==================================
+#include <conio.h>
+#include <stdio.h>
+#include "QueueOperations.c"
+int main() {
+	int op, x;
+	while(1) {	
+		printf("1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit\n");
+		printf("Enter your option : ");
+		scanf("%d",&op);
+		switch(op) {
+			case 1: 
+				printf("Enter element : ");
+				scanf("%d",&x);
+				enqueue(x);
+				break;
+			case 2: 
+				dequeue();
+				break;
+			case 3: 
+				display();
+				break;
+			case 4:
+				isEmpty();
+				break;
+			case 5:
+				size();
+				break;
+			case 6: exit(0);
+		}
+	}
+}
+
+//File Name: QueueOperations.c
+//==================================
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX 20
+int queue_arr[MAX];
+int rear=-1;
+int front=-1;
+void enqueue(int item)
+{
+	if(isFull())
+	{
+		printf("Queue overflow\n");
+	}
+	else
+	{
+		if(front==-1)
+		front=0;
+		rear=rear+1;
+		queue_arr[rear]=item;
+		printf("Successfully inserted.\n");
+	}
+}
+void dequeue()
+{
+	int item;
+	if(front==-1 || front==rear+1)
+	{
+		printf("Queue is underflow.\n");
+	}
+	else{
+	item=queue_arr[front];
+	front=front+1;
+	printf("Deleted element = %d\n",item);
+	}
+}
+void isEmpty()
+{
+	if(front==-1 || front==rear+1)
+	printf("Queue is empty.\n");
+	else
+	printf("Queue is not empty.\n");
+}
+int isFull()
+{
+	if(rear==MAX-1)
+	return 1;
+	else
+	return 0;
+}
+void display()
+{
+	int i;
+	if(front==-1 || front==rear+1)
+	{
+		printf("Queue is empty.\n");
+	}
+	else
+	{
+		printf("Elements in the queue : ");
+		for(i=front;i<=rear;i++)
+		printf("%d ",queue_arr[i]);
+		printf("\n");
+	}
+}
+void size()
+{
+	int i,count=0;
+	if(front==-1 || front==rear+1)
+	printf("Queue size : 0\n");
+	else
+	{
+	for(i=front;i<=rear;i++)
+	count++;
+	printf("Queue size : %d\n",count);
+	}
+}
+
+
+
+
+
+
+2.	Write a program to implement circular queue using linked lists.
+
+Sample Input and Output:
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 1
+	Enter element : 15
+	Successfully inserted.
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 1
+	Enter element : 16
+	Successfully inserted.
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 1
+	Enter element : 17
+	Successfully inserted.
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 3
+	Elements in the circular queue : 15 16 17 
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 5
+	Circular queue size : 3
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 2
+	Deleted value = 15
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 2
+	Deleted value = 16
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 2
+	Deleted value = 17
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 3
+	Circular queue is empty.
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 4
+	Circular queue is empty.
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 5
+	Circular queue size : 0
+	1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit
+	Enter your option : 6
+
+Solution: 
+
+//File Name: CQueueLL.c
+//==================================
+#include <stdlib.h>
+#include <stdio.h>
+#include "CQueueOperationsLL.c"
+int main() {
+	int op, x;
+	while(1) {	
+		printf("1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit\n");
+		printf("Enter your option : ");
+		scanf("%d",&op);
+		switch(op) {
+			case 1: 
+				printf("Enter element : ");
+				scanf("%d",&x);
+				enqueue(x);
+				break;
+			case 2: 
+				dequeue();
+				break;
+			case 3: 
+				display();
+				break;
+			case 4:
+				isEmpty();
+				break;
+			case 5:
+				size();
+				break;
+			case 6: exit(0);
+		}
+	}
+}
+
+//File Name: CQueueOperationsLL.c
+//==================================
+struct node
+{
+	int data;
+	struct node*next;
+};
+struct node*f=NULL;
+struct node*r=NULL;
+void enqueue(int d)
+{
+	struct node*n;
+	n=(struct node*)malloc(sizeof(struct node));
+	n->data=d;
+	n->next=NULL;
+	if((r==NULL) && (f==NULL))
+	{
+		f=r=n;
+		r->next=f;
+	}
+	else
+	{
+		r->next=n;
+		r=n;
+		n->next=f;
+	}
+	printf("Successfully inserted.\n");
+}
+void dequeue()
+{
+	struct node*t;
+	t=f;
+	if((f==NULL)&&(r==NULL))
+	{
+		printf("Circular queue is underflow.\n");
+	}
+	else if(f==r)
+	{
+		f=r=NULL;
+		printf("Deleted value = %d\n",t->data);
+		free(t);
+	}
+	else
+	{
+		f=f->next;
+		r->next=f;
+		printf("Deleted value = %d\n",t->data);
+		free(t);
+	}
+}
+void display()
+{
+	struct node*t;
+	t=f;
+	if((f==NULL)&&(r==NULL))
+	{
+		printf("Circular queue is empty.\n");
+	}
+	else
+	{
+		printf("Elements in the circular queue : ");
+		do{
+			printf("%d ",t->data);
+			t=t->next;
+		}while(t!=f);
+		printf("\n");
+	}
+}
+void isEmpty()
+{
+	if((f==NULL)&&(r==NULL))
+	printf("Circular queue is empty.\n");
+	else
+	printf("Circular queue is not empty.\n");
+}
+void size()
+{
+	int count=0;
+	struct node*t;
+	t=f;
+	if((f==NULL)&&(r==NULL))
+	printf("Circular queue size : 0\n");
+	else
+	{
+		do{
+			t=t->next;
+			count++;
+		}while(t!=f);
+		printf("Circular queue size : %d\n",count);
+	}
+}
+
+
+
+
+
+
+
+
+Home Assignment
+1.	Implementation of double ended queue using linked list
+
+Fill the missing code int functions inject (int ele), eject, and display() in the below code.
+
+The function inject(int ele) inserts an element ele into the rear of double ended queue and it gives "Dequeue is overflow." error if the maximum capacity of the dequeue is reached.
+
+The function eject() removes an element from the rear of the double ended queue and it gives "Dequeue is underflow." error if there are no more elements in the dequeue.
+
+The function display() prints all the elements of the double ended queue.
+
+
+
+
+2.	 Write a program to implement circular queue using arrays.
+
+Note: Define the MAX value as 5.
+
+Solution 
+//File Name: CQueueUsingArray.c
+//==================================
+#include <stdio.h>
+#include <stdlib.h>
+#include "CQueueOperations.c"
+
+int main() {
+	int op, x;
+	while(1) {	
+		printf("1.Enqueue 2.Dequeue 3.Display 4.Is empty 5.Size 6.Exit\n");
+		printf("Enter your option : ");
+		scanf("%d",&op);
+		switch(op) {
+			case 1: 
+				printf("Enter element : ");
+				scanf("%d",&x);
+				enqueue(x);
+				break;
+			case 2: 
+				dequeue();
+				break;
+			case 3: 
+				display();
+				break;
+			case 4:
+				isEmpty();
+				break;
+			case 5:
+				size();
+				break;
+			case 6: exit(0);
+		}
+	}
+}
+
+//File Name: CQueueOperations.c
+//==================================
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX 5
+int cqueue_arr[MAX];
+int front=-1;
+int rear=-1;
+void enqueue(int item)
+{
+	if(isFull())
+	    printf("Circular queue is overflow.\n");
+	else
+	{
+		if(front==-1)
+		front=0;
+		if(rear==MAX-1)
+		rear=0;
+		else
+		rear=rear+1;
+		cqueue_arr[rear]=item;
+		printf("Successfully inserted.\n");
+	}
+}
+void dequeue()
+{
+	int item;
+	if(front==-1)
+	{
+		printf("Circular queue is underflow.\n");
+	}
+	else
+	{
+		item=cqueue_arr[front];
+		if(front==rear)
+		{
+			front=-1;
+			rear=-1;
+		}
+		else if(front==MAX-1)
+		front=0;
+		else
+		front=front+1;
+		printf("Deleted element = %d\n",item);
+	}
+}
+void display()
+{
+	int i;
+	if(front==-1)
+	{
+		printf("Circular queue is empty.\n");
+	}
+	else
+	{
+		printf("Elements in the circular queue : ");
+		i=front;
+		if(front<=rear)
+		{
+			while(i<=rear)
+			printf("%d ",cqueue_arr[i++]);
+		}
+		else
+		{
+			while(i<=MAX-1)
+			printf("%d ",cqueue_arr[i++]);
+			i=0;
+			while(i<=rear)
+			printf("%d ",cqueue_arr[i++]);
+		}
+		printf("\n");
+	}
+}
+void isEmpty()
+{
+	if(front==-1)
+	printf("Circular queue is empty.\n");
+	else
+	printf("Circular queue is not empty.\n");
+}
+int isFull()
+{
+	if((front==0 && rear==MAX-1)||(front==rear+1))
+	return 1;
+	else
+	 return 0;
+}
+void size()
+{
+	int i,count=0;
+	if(front==-1)
+	printf("Circular queue size : 0\n");
+	else
+	{
+		i=front;
+		if(front<=rear)
+		{
+			while(i<=rear)
+			{
+				count++;
+				i++;
+			}
+		}
+		else
+		{
+			while(i<=MAX-1)
+			{
+				count++;
+				i++;
+			}
+			i=0;
+			while(i<=rear)
+			{
+				i++;
+				count++;
+			}
+		}
+		printf("Circular queue size : %d\n",count);
+	}
+}
+
+
+
+3.	Implementation of double ended queue using array
+
+Fill the missing code int functions inject (int ele), eject, and display() in the below code.
+
+The function inject(int ele) inserts an element ele into the rear of double ended queue and it gives "Double ended queue is overflow." error if the maximum capacity of the dequeue is reached.
+
+The function eject() removes an element from the rear of the double ended queue and it gives "Double ended queue is underflow." error if there are no more elements in the dequeue.
+
+The function display() prints all the elements of the double ended queue.
+
+Note: Do use printf() with '\n' at the end of display().
+
+Solution: 
+//File Name: DequeueArrayMain1.c
+//==================================
+#include <stdio.h>
+#include <conio.h>
+#include "DequeueArrayInjectEject.c"
+int main() {
+  int op, x;
+  while (1) {
+    printf("1.Inject 2.Eject 3.Display 4.Exit\n");
+    printf("Enter your option : ");
+    scanf("%d", & op);
+    switch (op) {
+    case 1:
+      printf("Enter element : ");
+      scanf("%d", & x);
+      inject(x);
+      break;
+    case 2:
+      eject();
+      break;
+    case 3:
+      display();
+      break;
+    case 4:
+      exit(0);
+    }
+  }
+}
+
+//File Name: DequeueArrayInjectEject.c
+//==================================
+#define MAX 10
+int deQueue[MAX];
+int rear =-1,front=-1;
+
+void inject(int x) {
+	if(isFull())
+	{
+		printf("Double ended queue is overflow.\n");
+	}
+	else {
+	if(front==-1)
+	{
+		front=0;
+		rear=0;
+	}
+	else if(rear==MAX-1)
+	rear=0;
+	else
+	rear=rear+1;
+	deQueue[rear]=x;
+	printf("Successfully inserted at rear side.\n");
+	}
+}
+
+void eject() {
+	int item;
+	if(isEmpty())
+	{
+		printf("Double ended queue is undeflow.\n");
+	}
+	else
+	{
+		item=deQueue[rear];
+		if(front==rear)
+		{
+			front=-1;
+			rear=-1;
+		}
+		else if(rear==0)
+		rear=MAX-1;
+		else
+		rear=rear-1;
+		printf("Deleted element from the rear side = %d\n",item);
+	}
+}
+int isFull()
+{
+	if((front==0 && rear==MAX-1)||(front==rear+1))
+	return 1;
+	else
+	return 0;
+}
+int isEmpty()
+{
+	if(front==-1)
+	return 1;
+	else
+	return 0;
+}
+
+void display() {
+	int i;
+	if(isEmpty())
+	{
+		printf("Double ended queue is empty.\n");
+	}
+	else
+	{
+		printf("Elements in the double ended queue : ");
+		i=front;
+		if(front<=rear)
+		{
+			while(i<=rear)
+			printf("%d ",deQueue[i++]);
+		}
+		else
+		{
+			while(i<=MAX-1)
+			printf("%d ",deQueue[i++]);
+			i=0;
+			while(i<=rear)
+			printf("%d ",deQueue[i++]);
+		}
+		printf("\n");
+	}
+}
+
+
+
+
+
+
+4.	Write a program to implement queue using linked lists.
+
+Sample Input and Output:
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 1
+	Enter element : 57
+	Successfully inserted.
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 1
+	Enter element : 87
+	Successfully inserted.
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 5
+	Queue size : 2
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 3
+	Elements in the queue : 57 87 
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 2
+	Deleted value = 57
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 2
+	Deleted value = 87
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 3
+	Queue is empty.
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 5
+	Queue size : 0
+	1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit
+	Enter your option : 6
+
+
+Solution: 
+//File Name: QueueUsingLL.c
+//==================================
+#include <conio.h>
+#include <stdio.h>
+#include "QueueOperationsLL.c"
+int main() {
+	int op, x;
+	while(1) {	
+		printf("1.Enqueue 2.Dequeue 3.Display 4.Is Empty 5.Size 6.Exit\n");
+		printf("Enter your option : ");
+		scanf("%d",&op);
+		switch(op) {
+			case 1: 
+				printf("Enter element : ");
+				scanf("%d",&x);
+				enqueue(x);
+				break;
+			case 2: 
+				dequeue();
+				break;
+			case 3: 
+				display();
+				break;
+			case 4:
+				isEmpty();
+				break;
+			case 5:
+				size();
+				break;
+			case 6: exit(0);
+		}
+	}
+}
+
+//File Name: QueueOperationsLL.c
+//==================================
+struct node{
+	int info;
+	struct node*link;
+}*front=NULL,*rear=NULL;
+void enqueue(int item)
+{
+	struct node*tmp;
+	tmp=(struct node*)malloc(sizeof(struct node));
+	if(tmp==NULL)
+	{
+		printf("Memory not available\n");
+	}
+	else
+	{
+		tmp->info=item;
+		tmp->link=NULL;
+		if(front==NULL)
+		front=tmp;
+		else
+		rear->link=tmp;
+		rear=tmp;
+	    printf("Successfully inserted.\n");
+	}
+}
+void dequeue()
+{
+	struct node*tmp;
+	int item;
+	if(front==NULL)
+	{
+		printf("Queue is underflow.\n");
+	}
+	else
+	{
+		tmp=front;
+		item=tmp->info;
+		front=front->link;
+		printf("Deleted value = %d\n",item);
+		free(tmp);
+	}
+}
+void display()
+{
+	struct node*ptr;
+	ptr=front;
+	if(front==NULL)
+	{
+		printf("Queue is empty.\n");
+	}
+	else
+	{
+		printf("Elements in the queue : ");
+		while(ptr!=NULL)
+		{
+			printf("%d ",ptr->info);
+			ptr=ptr->link;
+		}
+		printf("\n");
+	}
+}
+void isEmpty()
+{
+	if(front==NULL)
+	{
+		printf("Queue is empty.\n");
+	}
+	else
+	{
+		printf("Queue is not empty.\n");
+	}
+}
+void size()
+{
+	int count=0;
+	struct node*p;
+	p=front;
+	if(front==NULL)
+	printf("Queue size : 0\n");
+	else
+	{
+		while(p!=NULL)
+		{
+			p=p->link;
+			count++;
+		}
+		printf("Queue size : %d\n",count);
+	}
+}
