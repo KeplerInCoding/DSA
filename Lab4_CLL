@@ -1,0 +1,615 @@
+1-Write a program that uses functions to perform the following operations on a Circular Linked List:
+1.	Insert At specified position
+2.	Traverse the List
+3.	Search
+4.	Delete
+5.	Exit
+
+
+2-Fill in the missing code in the below program to subtract two polynomials using linked lists.
+//File Name: PolyLLMain2.c
+//==================================
+#include <stdio.h>
+#include <stdlib.h>
+#include "SubPolyLL.c"
+
+poly create(poly head) {
+	poly temp;
+	char ch;
+	int coeff, exp;
+	do {
+		temp = (poly)malloc(sizeof(struct polynomial));
+		printf("Enter coeff and exp of node : ");
+		scanf("%d%d", &coeff, &exp);
+		temp -> coeff = coeff;
+		temp -> exp = exp;
+		temp -> next = NULL;
+		head = addTerm(head, temp);
+		printf("Do u want another node (y/n) : ");
+		scanf(" %c", &ch);
+	} while(ch != 'n');
+	return head;
+}
+
+void main() {
+	poly head1 = NULL, head2 = NULL, result = NULL;
+	int ch;
+	printf("Enter the first polynomial : \n");
+	head1 = create(head1);
+	printf("Enter the second polynomial : \n");
+	head2 = create(head2);
+	result = sub(head1, head2);
+	printf("The first polynomial : ");
+	print(head1);
+	printf("The second polynomial : ");
+	print(head2);
+	printf("Subtraction result : ");
+	print(result);
+}
+
+//File Name: SubPolyLL.c
+//==================================
+struct polynomial {
+	int coeff;
+	int exp;
+	struct polynomial *next;
+};
+typedef struct polynomial *poly;
+
+poly createnode(int coeff,int exp)
+{
+	poly temp;
+	temp = (poly)malloc(sizeof(struct polynomial));
+	temp->coeff = coeff;
+	temp->exp = exp;
+	temp->next = NULL;
+	return temp;
+}
+
+poly addTerm(poly head, poly temp) 
+{
+	if(head == NULL)
+	{
+		head = temp;
+		return head;
+	}
+	else
+	{
+		poly ptr,preptr;
+		ptr = head;
+		preptr = ptr;
+		if(ptr->next == NULL)
+		{
+			if(temp->exp > ptr->exp)
+			{
+				temp->next = head;
+				head = temp;
+				return head;
+			}
+			else
+			{
+				ptr->next = temp;
+				return head;
+			}
+		}
+		
+		else
+		{
+			int count = 0;
+			while(temp->exp < ptr->exp)
+			{
+				preptr = ptr;
+				if(ptr->next!=NULL)
+				{
+					ptr = ptr->next;
+					count++;
+				}
+				else
+					break;
+			}
+			if(count==0)
+			{
+				temp->next = head;
+				head = temp;
+				return head;
+			}
+			else
+			{
+				if(preptr->next == NULL)
+				{
+					preptr->next = temp;
+					return head;
+				}
+				else
+				{
+					preptr->next = temp;
+					temp->next = ptr;
+					return head;
+				}
+			}
+		}
+	}
+}
+
+void print(poly head) {
+	poly temp = head;
+	while(temp != NULL) {
+		printf("%d X^ %d ---> ", temp -> coeff, temp -> exp);
+		temp = temp -> next;
+	}
+	printf("NULL\n");
+}
+
+poly sub(poly head1, poly head2) 
+{
+	poly result = NULL,ptr1,ptr2,res1 = NULL, temp=NULL;
+	ptr1 = head1;
+	ptr2 = head2;
+	while(ptr1!=NULL && ptr2!=NULL)
+	{
+		if(ptr1->exp > ptr2->exp)
+		{
+			temp = createnode(ptr1->coeff,ptr1->exp);
+			ptr1 = ptr1->next;
+		}
+		else if(ptr1->exp < ptr2->exp)
+		{
+			temp = createnode(ptr2->coeff,ptr2->exp);
+			ptr2 = ptr2->next;
+		}
+		else
+		{
+			int diff;
+			diff = ptr1->coeff - ptr2->coeff;
+			temp = createnode(diff,ptr1->exp);
+			ptr1 = ptr1->next;
+			ptr2 = ptr2->next;
+		}
+		if(result==NULL)
+		{
+			result = temp;
+			res1 = result;
+		}
+		else
+		{
+			res1->next = temp;
+			res1 = res1->next;
+		}
+	}
+	if(ptr2==NULL)
+		res1->next = ptr1;
+		
+	else
+	{
+		while(ptr2!=NULL)
+		{
+			temp = createnode((-1*ptr2->coeff),ptr2->exp);
+			res1->next = temp;
+			res1 = res1->next;
+			ptr2 = ptr2->next;
+		}
+	}
+	return result;
+}
+
+
+
+
+
+Home Assignment
+
+1- Write a program that uses functions to perform the following operations on double linked list
+i) Creation  ii)insertion  iii)deletion  iv) Traversal
+
+//File Name: AllOperationsDLL.c
+//==================================
+#include<stdio.h>
+#include<stdlib.h>
+struct node{
+	int data;
+	struct node*next;
+	struct node* prev;
+};
+typedef struct node*NODE;
+void traverse(NODE head){
+	NODE temp=head;
+	while(temp!=NULL){
+		printf("%d\t",temp->data);
+		temp=temp->next;
+		
+	}
+	printf("\n");
+}
+NODE deletion(NODE head,int val){
+	NODE temp=head;
+	if(head->data==val){
+		NODE t=head;
+		head=head->next;
+		free(t);
+	}
+	else{
+		while(temp->data!=val){
+			temp=temp->next;
+			if(temp==NULL)
+			break;
+		}
+		if(temp==NULL){
+			printf("%d not found.\n",val);
+			return head;
+		}
+		else{
+			temp->next->prev=temp->prev;
+			temp->prev->next=temp->next;
+			free(temp);
+		}
+	}
+	return head;
+}
+NODE insertattail(NODE head,int val){
+	NODE p=malloc(sizeof(struct node));
+	p->data=val;
+	p->next=NULL;
+	p->prev=NULL;
+	if(head==NULL){
+		head=p;
+	}
+	else{
+		NODE temp=head;
+		while(temp->next!=NULL){
+			temp=temp->next;
+		}
+		p->prev=temp;
+		temp->next=p;
+	}
+	return head;
+}
+void main(){
+	NODE head=NULL;
+	int ch;
+	do{
+		printf("Operations on doubly linked list\n");
+		printf("1. Insert \n");
+		printf("2.Remove\n");
+		printf("3. Display\n");
+		printf("0. Exit\n");
+		printf("Enter Choice 0-4? : ");
+		scanf("%d",&ch);
+		switch(ch){
+			case 1:
+			printf("Enter number: ");
+			int n;
+			scanf("%d",&n);
+			head=insertattail( head , n);
+			break;
+			case 2:
+			printf("Enter number to delete: ");
+			int k;
+			scanf("%d",&k);
+			head = deletion(head,k);
+			break;
+			case 3:
+			traverse(head);
+			break;
+			case 0:
+			break;
+		}
+	}
+	while(ch!=0);
+}
+	
+
+
+2-	Fill in the missing code in the below function deleteAtPositionInDCLL(NODE first, int pos), which deletes a node at the specified position of Doubly Circular Linked List.
+
+
+
+3-	Fill in the missing code in the below program to add two polynomials using linked lists.
+
+//File Name: PolyLLMain1.c
+//==================================
+#include <stdio.h>
+#include <stdlib.h>
+#include "AddPolyLL.c"
+
+poly create(poly head) {
+	poly temp;
+	char ch;
+	int coeff, exp;
+	do {
+		temp = (poly)malloc(sizeof(struct polynomial));
+		printf("Enter coeff and exp of node : ");
+		scanf("%d%d", &coeff, &exp);
+		temp -> coeff = coeff;
+		temp -> exp = exp;
+		temp -> next = NULL;
+		head = addTerm(head, temp);
+		printf("Do u want another node (y/n) : ");
+		scanf(" %c", &ch);
+	} while(ch != 'n');
+	return head;
+}
+
+void main() {
+	poly head1=NULL, head2= NULL, result = NULL;
+	int ch;
+	printf("Enter the first polynomial : \n");
+	head1 = create(head1);
+	printf("Enter the second polynomial : \n");
+	head2 = create(head2);
+	result = add(head1, head2);
+	printf("The first polynomial : ");
+	print(head1);
+	printf("The second polynomial : ");
+	print(head2);
+	printf("Addition result : ");
+	print(result);
+}
+
+//File Name: AddPolyLL.c
+//==================================
+struct polynomial {
+	int coeff;
+	int exp;
+	struct polynomial *next;
+};
+typedef struct polynomial *poly;
+
+poly addTerm(poly head, poly temp) {
+	poly ptr1,ptr2;
+	ptr1 = ptr2=head;
+	if(ptr1==NULL){
+		head = temp;
+		
+	}
+	else{
+		while(ptr1!=NULL && ptr1->exp > temp->exp){
+			ptr2 = ptr1;
+			ptr1 = ptr1->next;
+			
+		}
+		if(ptr1==NULL){
+			ptr2->next=temp;
+			
+		}
+		else if(ptr1->exp == temp->exp){
+			ptr1->coeff=ptr1->coeff+temp->coeff;
+		}else if(ptr1->exp < temp ->exp){
+			if(ptr2 == ptr1){
+				temp->next=ptr1;
+				head=temp;
+				
+			}
+			else{
+				temp->next=ptr1;
+				ptr2->next=temp;
+			}
+		}
+	}
+	return head;
+	
+}
+
+
+
+void print(poly head) {
+	poly temp = head;
+	while(temp != NULL) {
+		printf("%d X^ %d ---> ", temp -> coeff, temp -> exp);
+		temp = temp -> next;
+	}
+	printf("NULL\n");
+}
+
+poly add(poly head1, poly head2) {
+	poly p1 =head1;
+	poly p2 = head2;
+	poly new;
+	poly sum;
+	while(p1!=0 && p2!=0){
+		new = (poly)malloc(sizeof(struct polynomial ));
+		new->next = NULL;
+		if(p1->exp == p2->exp){
+			new->coeff = p1->coeff+p2->coeff;
+			new->exp=p1->exp;
+			p1=p1->next;
+			p2=p2->next;
+		}
+		else if(p1->exp > p2->exp){
+			new->coeff = p1->coeff;
+			new->exp = p1->exp;
+			p1 =p1->next;
+		}
+		else if(p1->exp < p2 -> exp){
+			new->coeff = p2->coeff;
+			new->exp=p2->exp;
+			p2=p2->next;
+		}
+		sum = addTerm(sum , new);
+	}
+	while(p1!=NULL){
+		new=(poly)malloc(sizeof(struct polynomial));
+		new->next=NULL;
+		new->coeff = p1->coeff;
+		new->exp = p1->exp;
+		p1=p1->next;
+	}
+	while(p2!=NULL){
+		new = (poly)malloc(sizeof(struct polynomial));
+		new->next=NULL;
+		new->coeff = p2->coeff;
+		new->exp=p2->exp;
+		p2=p2->next;
+	}
+	return sum;
+		
+	}
+	
+
+4-	Fill in the missing code in the below program to multiply two polynomials using linked lists.
+
+//File Name: PolyLLMain3.c
+//==================================
+#include <stdio.h>
+#include <stdlib.h>
+#include "ProductPolyLL.c"
+
+poly create(poly head) {
+	poly temp;
+	char ch;
+	int coeff, exp;
+	do {
+		temp = (poly)malloc(sizeof(struct polynomial));
+		printf("Enter coeff and exp of node : ");
+		scanf("%d%d", &coeff, &exp);
+		temp -> coeff = coeff;
+		temp -> exp = exp;
+		temp -> next = NULL;
+		head = addTerm(head, temp);
+		printf("Do u want another node (y/n) : ");
+		scanf(" %c", &ch);
+	} while(ch != 'n');
+	return head;
+}
+
+void main() {
+	poly head1 = NULL, head2 = NULL, result = NULL;
+	int ch;
+	printf("Enter the first polynomial : \n");
+	head1 = create(head1);
+	printf("Enter the second polynomial : \n");
+	head2 = create(head2);
+	result = mul(head1, head2);
+	printf("The first polynomial : ");
+	print(head1);
+	printf("The second polynomial : ");
+	print(head2);
+	printf("Product result : ");
+	print(result);
+}
+
+//File Name: ProductPolyLL.c
+//==================================
+struct polynomial {
+	int coeff;
+	int exp;
+	struct polynomial *next;
+};
+typedef struct polynomial *poly;
+
+ poly createnode(int coeff,int exp){
+ 	poly temp;
+ 	temp = (poly)malloc(sizeof(struct polynomial));
+ 	temp->coeff = coeff;
+ 	temp->exp = exp;
+ 	temp->next = NULL;
+ 	return temp;
+ 	
+ }
+ 
+poly addTerm(poly head, poly temp) 
+{	
+	if(head==NULL)
+	{
+		head = temp;
+		return head;
+	}
+	else
+	{
+		poly ptr,preptr;
+		ptr= head;
+		preptr = ptr;
+		if(ptr->next == NULL)
+		{
+			if(temp->exp > ptr ->exp)
+			{
+				temp->next = head;
+				head = temp;
+			return head;
+			}
+			else if(temp->exp < ptr->exp)
+			{
+				head->next = temp;
+				return head;
+			}
+			else
+			{
+				ptr->coeff = ptr ->coeff + temp->coeff;
+				return head;
+			}
+		}
+		else
+		{
+			int count = 0;
+			while(temp ->exp < ptr->exp)
+			{
+				preptr = ptr;
+				count++;
+				if(ptr->next!=NULL)
+				ptr = ptr->next;
+				
+				else
+				break;
+			}
+			
+			if(count==0)
+			{
+				temp->next = head;
+				head = temp;
+				return head;
+			}
+			else
+			{
+				if(preptr->next ==NULL)
+				{
+					preptr->next = temp;
+					return head;
+				}
+				else
+				{
+					if(temp->exp == preptr->next->exp)
+					{
+						ptr->coeff = ptr ->coeff + temp->coeff;
+						return head;
+					}
+					
+					preptr->next = temp;
+					temp->next = ptr;
+					return head;
+				}
+			}
+		}
+	}
+}
+
+void print(poly head) {
+	poly temp = head;
+	while(temp != NULL) {
+		printf("%d X^ %d ---> ", temp -> coeff, temp -> exp);
+		temp = temp -> next;
+	}
+	printf("NULL\n");
+}
+
+poly mul(poly head1, poly head2)
+{
+	int coeff,exp;
+	poly ptr1,ptr2;
+	poly result = NULL, temp = NULL;
+	ptr1 = head1;
+	ptr2 = head2;
+	while(ptr1!=NULL)
+	{
+		ptr2 = head2;
+		while(ptr2!=NULL)
+		{
+			coeff = ptr1->coeff * ptr2->coeff;
+			exp = ptr1->exp + ptr2->exp;
+			temp = createnode(coeff,exp);
+			result = addTerm(result,temp);
+			ptr2 = ptr2 ->next;
+		}
+		ptr1 = ptr1-> next;
+	}
+	return result;
+}
+
