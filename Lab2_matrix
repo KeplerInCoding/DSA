@@ -1,0 +1,407 @@
+Program 1: Write a C program to Implement a sparse matrix using arrays.
+Solution:
+//File Name: sparsematrix_arrays.c
+//==================================
+#include<stdio.h>
+void main()
+{
+	int i,j,row,column,a[50][50];
+	printf("Enter the row & column sizes of the sparse matrix : ");
+	scanf("%d%d",&row,&column);
+	for(i=0;i<row;i++)
+	{
+		for(j=0;j<column;j++)
+		{
+			printf("Enter the value of sparse_matrix[%d][%d] : ",i,j);
+			scanf("%d",&a[i][j]);
+		}
+	}
+	printf("Original matrix scanned is:\n");
+	for(i=0;i<row;i++)
+	{
+		for(j=0;j<column;j++)
+		{
+			printf("%d\t",a[i][j]);
+		}
+		printf("\n");
+	}
+	printf("Sparse matrix array (Triplet) representation is:\n");
+	for(i=0;i<row;i++)
+	{
+		for(j=0;j<column;j++)
+		{
+			if(a[i][j]!=0)
+			{
+			printf("%d ",i);
+		    } 
+	   } 
+	}
+	printf("\n");
+	for(i=0;i<row;i++)
+	{
+		for(j=0;j<column;j++)
+		{
+			if(a[i][j]!=0)
+			{
+				printf("%d ",j);
+			}
+		}
+	}
+	printf("\n");
+	for(i=0;i<row;i++)
+	{
+		for(j=0;j<column;j++)
+		{
+			if(a[i][j]!=0)
+			{
+				printf("%d ",a[i][j]);
+			}
+		}
+	}
+	printf("\n");
+}
+
+Program 2: SUM OF NON-EDGES :
+A set of numbers forming a matrix N*N is passes as input. The program has to print the sum of numbers which are not along the edges.
+
+Solution:
+//File Name: SumOfNonEdges.c
+//==================================
+#include<stdio.h>
+void main()
+{
+	int a[100][100],n,sum=0;
+	scanf("%d",&n);
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			scanf("%d",&a[i][j]);
+			if(i!=0&&i!=n-1)
+			{
+				if(j!=0&&j!=n-1)
+				{
+					sum+=a[i][j];
+				}
+			}
+		}
+		}
+	printf("%d\n",sum);
+}
+
+Program 3: Write a C program to Implement sparse matrix multiplication using arrays.
+Solution:
+//File Name: sparsematrix_multiplication.c
+//==================================
+#include<stdio.h>
+void main()
+{
+	int i,j,k,r1,r2,c1,c2,a1[10][10],a2[10][10],c[10][10];
+	printf("Enter no of rows : ");
+	scanf("%d",&r1);
+	printf("Enter no of coloumns : ");
+	scanf("%d",&c1);
+	for(i=0;i<r1;i++)
+	{
+		for(j=0;j<c1;j++)
+		{
+			scanf("%d",&a1[i][j]);
+		}
+	}
+	printf("Enter no of rows : ");
+	scanf("%d",&r2);
+	printf("Enter no of columns : ");
+	scanf("%d",&c2);
+	for(i=0;i<r2;i++)
+	{
+		for(j=0;j<c2;j++)
+		{
+			scanf("%d",&a2[i][j]);
+		}
+	}
+	if(c1==r2)
+	{
+		for(i=0;i<r1;i++)
+		{
+			for(j=0;j<c2;j++)
+			{
+				c[i][j]=0;
+				for(k=0;k<c1;k++)
+				{
+					c[i][j]+=a1[i][k]*a2[k][j];
+			}
+		}
+	}
+	printf("Result of matrix multiplication : \n");
+	for(i=0;i<r1;i++)
+	{
+		for(j=0;j<c2;j++)
+		{
+			if(c[i][j]!=0)
+			{
+				printf("%d ",i);
+			}
+		}
+	}
+	printf("\n");
+	for(i=0;i<r1;i++)
+	{
+		for(j=0;j<c2;j++)
+		{
+			if(c[i][j]!=0)
+			{
+				printf("%d ",j);
+			}
+		}
+	}
+	printf("\n");
+	for(i=0;i<r1;i++)
+	{
+	for(j=0;j<c2;j++)
+	{
+		if(c[i][j]!=0)
+		{
+			printf("%d ",c[i][j]);
+		}
+	}
+}
+	printf("\n");
+}
+else
+{
+	printf("Not possible.");
+}
+}
+
+Program 4: Write a program to represent and display sparse matrix.
+Solution:
+//File Name: sparseMatrix.c
+//==================================
+#include<stdio.h>
+void main()
+{
+	int r,c,i,j,a[20][20],count=0;
+	printf("Enter the size of matrix (rows, columns): ");
+	scanf("%d%d",&r,&c);
+	printf("Enter elements of matrix\n");
+	for(i=0;i<r;i++)
+	{
+		for(j=0;j<c;j++)
+		{
+			printf("[%d][%d]: ",i,j);
+			scanf("%d",&a[i][j]);
+			if(a[i][j]!=0)
+			count++;
+		}
+	}
+	printf("Sparse form - list of 3 triples\n");
+	printf("%d\t%d\t%d\n",r,c,count);
+	for(i=0;i<r;i++)
+	{
+		for(j=0;j<c;j++)
+		{
+			if(a[i][j]!=0)
+			printf("%d\t%d\t%d\n",i,j,a[i][j]);
+		}
+	}
+}
+
+Program 5: Write a program to implement sparse matrix addition using arrays.
+Solution:
+//File Name: addMatrix.c
+//==================================
+#include<stdio.h>
+#include<stdlib.h>
+#define max 20
+void printsparse(int b[max][3]);
+void readsparse(int b[max][3]);
+void addsparse(int b1[max][3],int b2[max][3],int b3[max][3]);
+void main()
+{
+	int b1[max][3],b2[max][3],b3[max][3];
+	readsparse(b1);
+	readsparse(b2);
+	addsparse(b1,b2,b3);
+	printsparse(b3);
+}
+void readsparse(int b[max][3])
+{
+	int t,m,n;
+	printf("Enter no. of rows and columns:\n");
+	scanf("%d%d",&m,&n);
+	printf("No. of non-zero triples:");
+	scanf("%d",&t);
+	b[0][0]=m;
+	b[0][1]=n;
+	b[0][2]=t;
+	for(int i=1;i<=t;i++)
+	{
+		printf("Enter the triples(row,column,value):");
+		scanf("%d%d%d",&b[i][0],&b[i][1],&b[i][2]);
+	}
+}
+void addsparse(int b1[max][3],int b2[max][3],int b3[max][3])
+{
+	int i,j,t1,t2,k;
+	if(b1[0][0]!=b2[0][0] || b1[0][1]!=b2[0][1])
+	{
+		printf("\nYou have entered invalid matrix!! size must be equal");
+		exit(0);
+	}
+	t1=b1[0][2];
+	t2=b2[0][2];
+	i=j=k=0;
+	b3[0][0]=b1[0][0];
+	b3[0][1]=b1[0][1];
+	while(i<=t1 && j<=t2)
+	{
+		if(b1[i][0]<b2[j][0])
+		{
+			b3[k][0]=b1[i][0];
+			b3[k][1]=b1[i][1];
+			b3[k][2]=b1[i][2];
+			k++;
+			i++;
+		}
+		else if(b2[j][0]<b1[i][0])
+		{
+			b3[k][0]=b2[j][0];
+			b3[k][1]=b2[j][1];
+			b3[k][2]=b2[j][2];
+			k++;
+			j++;
+		}
+		else if(b1[i][1]<b2[j][1])
+		{
+			b3[k][0]=b1[i][0];
+			b3[k][1]=b1[i][1];
+			b3[k][2]=b1[i][2];
+			k++;
+			i++;
+		}
+		else if(b2[j][1]<b1[i][1])
+		{
+			b3[k][0]=b2[j][0];
+			b3[k][1]=b2[j][1];
+			b3[k][2]=b2[j][2];
+			k++;
+			j++;
+		}
+		else
+		{
+			b3[k][0]=b1[i][0];
+			b3[k][1]=b1[i][1];
+			b3[k][2]=b1[i][2]+b2[j][2];
+			k++;
+			i++;
+			j++;
+		}
+	}
+	while(i<=t1)
+	{
+		b3[k][0]=b1[i][0];
+		b3[k][1]=b1[i][1];
+		b3[k][2]=b1[i][2];
+		i++;
+		k++;
+		}
+		while(j<=t2)
+		{
+			b3[k][0]=b2[j][0];
+			b3[k][1]=b1[j][1];
+			b3[k][2]=b1[j][2];
+			j++;
+			k++;
+		}
+		b3[0][2]=k-1;
+}
+void printsparse(int b[max][3])
+{
+	int i,t;
+	t=b[0][2];
+	printf("row\tcolumn\tvalue\n");
+	for(i=1;i<=t;i++)
+	{
+		printf("%d\t%d\t%d\n",b[i][0],b[i][1],b[i][2]);
+	}
+}
+
+Program 6: Counter Spiral:
+Given a square matrix, you have to write a program to print it in a counter-clockwise spiral form.
+
+Solution: 
+//File Name: CounterSpiral.c
+//==================================
+#include<stdio.h>
+void main()
+{
+	int n;
+	scanf("%d",&n);
+	int a[n][n];
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			scanf("%d",&a[i][j]);
+		}
+	}
+	int top=0,bottom=n-1,left=0,right=n-1;
+	int dir=1;
+	int count=0;
+	while(top<=bottom&&left<=right)
+	{
+		if(dir==1)
+		{
+			for(int i=top;i<=bottom;i++)
+			{
+				count++;
+				if(count!=n*n)
+				printf("%d ",a[i][left]);
+				else
+				printf("%d",a[i][left]);
+			}
+			left++;
+			dir=2;
+		}
+		else if(dir==2)
+		{
+			for(int i=left;i<=right;i++)
+			{
+				count++;
+				if(count!=n*n)
+				printf("%d ",a[bottom][i]);
+				else
+				printf("%d",a[bottom][i]);
+			}
+			bottom--;
+			dir=3;
+		}
+		else if(dir==3)
+		{
+			for(int i=bottom;i>=top;i--)
+			{
+				count++;
+				if(count!=n*n)
+				printf("%d ",a[i][right]);
+				else
+				printf("%d",a[i][right]);
+			}
+			right--;
+			dir=4;
+		}
+		else if(dir==4)
+		{
+			for(int i=right;i>=left;i--)
+			{
+				count++;
+				if(count!=n*n)
+				printf("%d ",a[top][i]);
+				else
+				printf("%d",a[top][i]);
+			}
+			top++;
+			dir=1;
+		}
+	}
+	printf("\n");
+}
