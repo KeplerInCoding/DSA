@@ -1,0 +1,603 @@
+1-	Fill in the missing code in searchPosOfEle(node first, int x) function which searches a given element in the list of elements and prints the position of that element if found.
+//File Name: SingleLL8.c
+//==================================
+#include<stdio.h>
+#include<stdlib.h>
+
+#include "SearchPositionOfEle.c"
+
+void main() {
+	NODE first = NULL;
+	int x, pos, op;
+	while(1) {
+		printf("1.Insert At Begin 2.Search an element Position 3.Traverse the List 4.Exit\n");
+		printf("Enter your option : ");
+		scanf("%d", &op);
+		switch(op) {
+			case 1:	printf("Enter an element : ");
+					scanf("%d", &x);
+					first = insertAtBegin(first, x);
+					break;
+			case 2:	printf("Enter search element : ");
+					scanf("%d", &x);
+					pos = searchPosOfEle(first, x);
+					if (pos == 0) {
+						printf("The given element %d is not found in the given SLL\n", x);
+					} else {
+						printf("The given element %d is found at position : %d\n", x, pos);
+					}
+					break;
+			case 3:	if (first == NULL) {
+						printf("Single Linked List is empty\n");
+					} else {
+						printf("The elements in SLL are : ");
+						traverseList(first);
+					}
+					break;
+			case 4:	exit(0);
+		}
+	}
+}
+
+//File Name: SearchPositionOfEle.c
+//==================================
+struct node {
+	int data;
+	struct node *next;
+};
+typedef struct node *NODE;
+
+NODE createNode() {
+	NODE temp;
+	temp = (NODE) malloc(sizeof(struct node));
+	temp -> next = NULL;
+    return temp;
+}
+
+NODE insertAtBegin(NODE first, int x) {
+	NODE t,p;
+	p=createNode();
+	if(first == NULL)
+	{
+		first=p;
+		first->next = NULL;
+		first->data = x;
+	}
+
+	else
+	{
+	t=first;
+	first = p;
+	first->data = x;
+	first->next = t;
+	
+}
+return first;
+}
+int searchPosOfEle(NODE first, int key) {
+     int s=0;
+     NODE t;
+     t=first;
+     while(t != NULL)
+    {
+    	if(t->data == key)
+    	break;
+    	s++;
+    	t=t->next;
+    }if(t==NULL)
+    return 0;
+    return s+1;
+	
+}
+
+void traverseList(NODE first) {
+	NODE temp = first;
+	while (temp != NULL) 
+	{
+		printf("%d --> ",temp -> data);
+		temp = temp -> next;
+	}
+	printf("NULL\n");
+}
+
+
+************************************************************************
+
+
+2-	In the below singly linked list program we have two files, one file contains the main program and the other file contains the functions, to be implemented by the user.
+
+Here the user has to implement the code for two functions addNodes() and traverseList().
+
+The addNodes() function creates a new list and adds elements to the list until delimiter -1 is occurred.
+
+Fill in the missing code in the below functions addNodes(NODE first, int x) and traverseList(NODE first) in the file CreateAndAddNodes.c.
+
+
+
+//File Name: SingleLL1.c
+//==================================
+#include<stdio.h>
+#include<stdlib.h>
+
+#include "CreateAndAddNodes.c"
+
+void main() {
+	NODE first = NULL;
+	int x;
+	printf("Enter elements up to -1 : ");
+	scanf("%d", &x);
+	while (x != -1) {
+		first = addNodes(first, x);
+		scanf("%d", &x);
+	}
+	if (first == NULL) {
+		printf("Single Linked List is empty\n");
+	} else {
+		printf("The elements in SLL are : ");
+		traverseList(first);
+	}
+}
+
+//File Name: CreateAndAddNodes.c
+//==================================
+struct node {
+	int data;
+	struct node *next;
+};
+typedef struct node *NODE;
+
+NODE createNode() {
+	NODE t;
+	//struct node* head;
+	t=(struct node*)malloc(sizeof(struct node));
+  //t->next=data;
+  t->next = NULL;
+return t;
+	
+}
+
+NODE addNodes(NODE first, int x) {
+	NODE p,t;
+	t=first;
+	p=createNode();
+   if(t==NULL)
+   {
+   	first=p;
+   	first->data=x;
+   }
+   else
+   {
+   	while(t->next!=NULL)
+   	{
+   		t=t->next;
+   	}
+   	t->next=p;
+   	p->data=x;
+   }
+   return first;
+}
+
+void traverseList(NODE first) {
+
+NODE t;
+t=first;
+
+while(t!=NULL)
+{
+	printf("%d --> ",t->data);
+	t=t->next;
+}
+printf("NULL\n");
+}
+
+
+
+
+
+Home Assignment
+
+1-	1- Fill in the missing code in the below function insertAtPosition(NODE first, int pos, int x) in the file InsAtPosition.c, which inserts a new node at the specified position of the singlly linked list.
+
+//File Name: SingleLL4.c
+//==================================
+#include<stdio.h>
+#include<stdlib.h>
+
+#include "InsAtPosition.c"
+
+void main() {
+	NODE first = NULL;
+	int x, pos, op;
+	while(1) {
+		printf("1.Insert At specified position 2.Traverse the List 3.Exit\n");
+		printf("Enter your option : ");
+		scanf("%d", &op);
+		switch(op) {
+			case 1:	printf("Enter a position : ");
+					scanf("%d", &pos);
+					if (pos <= 0) {
+						printf("No such position in SLL so insertion is not possible\n");
+					} else {
+						printf("Enter an element : ");
+						scanf("%d", &x);
+						first = insertAtPosition(first, pos, x);
+					}
+					break;
+			case 2:	if (first == NULL) {
+						printf("Single Linked List is empty\n");
+					} else {
+						printf("The elements in SLL are : ");
+						traverseList(first);
+					}
+					break;
+			case 3:	exit(0);
+		}
+	}
+}
+
+//File Name: InsAtPosition.c
+//==================================
+struct node {
+	int data;
+	struct node *next;
+};
+typedef struct node *NODE;
+
+int count=0;
+
+NODE createNode() {
+	NODE temp;
+	temp = (NODE) malloc(sizeof(struct node));
+	temp -> next = NULL;
+	return temp;
+}
+
+NODE insertAtPosition(NODE first, int pos, int x) {
+	if(pos-1>count) {printf("No such position in SLL so insertion is not possible\n"); return first;}
+	NODE temp,cpt,ppt;
+	temp=createNode();
+	temp->data=x;
+	if(first==NULL) {count++; return temp;}
+	if(pos==1){
+		temp->next=first;
+		first=temp;
+		count++;
+		return first;
+	}
+	cpt=first;
+	while(--pos){
+		ppt=cpt;
+		cpt=cpt->next;
+	}
+	ppt->next=temp;
+	temp->next=cpt;
+	count++;
+	return first;
+}
+
+void traverseList(NODE first) {
+	NODE temp;
+	temp=first;
+	while(temp!=NULL){
+		printf("%d --> ",temp->data);
+		temp=temp->next;
+	}
+	printf("NULL\n");
+}
+
+
+
+2-	2- Fill in the missing code in the below function deleteAtPosition(NODE first, int pos), which deletes a node at the specified position of singly linked list.
+
+//File Name: SingleLL7.c
+//==================================
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "DelAtPosition.c"
+
+void main() {
+	NODE first = NULL;
+	int x, op, pos;
+	while(1) {
+		printf("1.Insert At End 2.Delete at Position 3.Traverse the List 4.Exit\n");
+		printf("Enter your option : ");
+		scanf("%d", &op);
+		switch(op) {
+			case 1:	printf("Enter an element : ");
+					scanf("%d", &x);
+					first = insertAtEnd(first, x);
+					break;
+			case 2:	if (first == NULL) {
+						printf("Single Linked List is empty so deletion is not possible\n");
+					} else {
+						printf("Enter position : ");
+						scanf("%d", &pos);
+						first = deleteAtPosition(first, pos);
+					}
+					break;
+			case 3:	if (first == NULL) {
+						printf("Single Linked List is empty\n");
+					} else {
+						printf("The elements in SLL are : ");
+						traverseList(first);
+					}
+					break;
+			case 4:	exit(0);
+		}
+	}
+}
+
+//File Name: DelAtPosition.c
+//==================================
+struct node {
+	int data;
+	struct node *next;
+};
+typedef struct node *NODE;
+
+NODE createNode() {
+	NODE temp;
+	temp = (NODE) malloc(sizeof(struct node));
+	temp -> next = NULL;
+	return temp;
+}
+
+NODE insertAtEnd(NODE first, int x) {
+	NODE ptr=createNode();
+	NODE temp=createNode();
+	ptr=first;
+	temp->data=x;
+	if(first==NULL)
+	{
+		first=temp;
+		return first;
+	}
+	while(ptr->next!=NULL)
+	{
+		ptr=ptr->next;
+	}
+	ptr->next=temp;
+	return first;
+}
+
+NODE deleteAtPosition(NODE first, int pos) {
+   NODE ptr=createNode();
+   NODE temp=createNode();
+   int i=1;
+   ptr=first;
+   if(pos==1)
+    {
+    	printf("The deleted element from SLL : %d\n",ptr->data);
+    	first=first->next;
+    	free(ptr);
+    	return first;
+    }
+    temp=ptr;
+    while(ptr!=NULL)
+    {
+    	if(i==pos){
+    		printf("The deleted element from SLL : %d\n",ptr->data);
+    		temp->next=ptr->next;
+    		free(ptr);
+    		return first;
+    	}
+    temp=ptr;
+    ptr=ptr->next;
+    i++;
+    }
+    printf("No such position in SLL so deletion is not possible\n");
+    return first;
+    
+}
+
+void traverseList(NODE first) {
+	NODE temp = first;
+	while (temp != NULL) {
+		printf("%d --> ",temp -> data);
+		temp = temp -> next;
+	}
+	printf("NULL\n");
+}
+
+
+3-	3- Fill in the missing code in the below function void reverseList() in the file ReverseList.c, which reverses the singly linked list.
+//File Name: ReverseList.c
+//==================================
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+struct node {
+    int data;
+    struct node *next;
+}*head;
+void createList(int n);
+void reverseList();
+void displayList();
+
+void createList(int n) {
+	struct node *temp,*ptr;
+	int num ,i;
+	head=(struct node *)malloc(sizeof(struct node));
+	scanf("%d",&num);
+	head->data=num;
+	head->next=NULL;
+	temp=head;
+	for(i=2;i<=n;i++){
+	ptr=(struct node *)malloc(sizeof(struct node));
+	scanf("%d",&num);
+	ptr->data=num;
+	ptr->next=NULL;
+	temp->next=ptr;
+	temp=temp->next;
+	}
+}
+
+void reverseList() {
+	
+	struct node *prev,*ptr;
+	if(head!=NULL)
+	{
+		prev=head;
+		ptr=head->next;
+		head=head->next;
+		prev->next=NULL;
+		while(head!=NULL)
+		{
+			head=head->next;
+			ptr->next=prev;
+			prev=ptr;
+			ptr=head;
+		}
+		head=prev;
+	}
+}
+
+void displayList() {
+    struct node *temp;
+    if(head == NULL) {
+        printf("List is empty.");
+    }
+    else {
+        temp = head;
+        while(temp != NULL) {
+            printf("%d ", temp->data); // Print the data of current node
+            temp = temp->next;  
+        }
+    }
+}
+int check(int n){
+        int x;
+        printf("Enter no.of nodes: ");
+        scanf("%d", &n);
+        if (n>0){
+            while (true){
+            printf("Enter data: ");
+            createList(n);
+            reverseList();
+            printf("Reversed the list: ");
+            displayList();
+            break;}
+        }
+        else {
+           printf("List size must be greater than zero:\n");
+            return check(n);
+    }
+    }
+    int main(){
+        int n;
+        return check(n);
+    }
+
+
+
+
+4-	5-Fill in the missing code in the below function void insertBeforePosition(int pos, int data, struct Node** head) in the file InsBeforePosition.c, which inserts a new node at the specified position of the singly linked list.
+ 
+        //File Name: SingleLL6.c
+//==================================
+#include<stdio.h>
+#include<stdlib.h>
+
+#include "InsBeforePosition.c"
+
+void main() {
+	struct Node* head = NULL;
+	int n,c,op,pos,x;
+	while(1){
+	    printf("1. Insert elements in the list.\n2. Insert element before kth index.\n3. Display\n4. Exit\n");
+	    printf("Enter opinion: ");
+	    scanf("%d", &op);
+	    switch(op){
+			case 1:	printf("Enter no.of elements in the list: ");
+					scanf("%d",&n);
+					printf("Enter the elements: ");
+					for(int i=1;i<=n;i++){
+	    				scanf("%d",&c);
+	    				insertLast(&head,c);
+						}
+						break;
+			case 2: printf("kth index: ");
+    				scanf("%d", &pos);
+    				printf("Element to be inserted before k: ");
+    				scanf("%d",&x);
+    				int size = calcSize(head);
+        			if (pos < 0 || pos >= size) {
+		    		printf("No such position in SLL so insertion is not possible\n");
+		    		} else {
+			    		insertBeforePosition(pos,x,&head);
+					}
+					break;
+			case 3: if (head==NULL){
+		    		printf("List is empty\n");
+					}
+					else{
+						display(head);
+					}
+					break;
+			case 4: exit(0);
+			default: printf("Out of range.\n");
+	    	
+	    }
+	}
+}
+
+//File Name: InsBeforePosition.c
+//==================================
+struct Node{
+    int data;
+    struct Node *next;
+};
+int calcSize(struct Node* node){
+    int size=0;
+    while(node!=NULL){
+        node = node->next;
+        size++;
+    }
+    return size;
+}
+
+void insertLast(struct Node** head, int data){
+	if(*head==NULL){
+		(*head)=(struct Node *)malloc(sizeof(struct Node));
+		(*head)->data=data;
+		(*head)->next=NULL;
+	}
+	else{
+		struct Node *newnode,*temp;
+		temp=(*head);
+		while(temp->next!=NULL) temp=temp->next;
+		newnode=(struct Node *)malloc(sizeof(struct Node));
+		newnode->data=data;
+		newnode->next=NULL;
+		temp->next=newnode;
+	}
+}
+
+void insertBeforePosition(int pos, int data, struct Node** head) {
+	if(pos==0){
+		struct Node *newnode;
+		newnode=(struct Node *)malloc(sizeof(struct Node));
+		newnode->next=(*head);
+		newnode->data=data;
+		(*head)=newnode;
+	}
+	else{
+		struct Node *newnode,*temp;
+		temp=(*head);
+		while(--pos) temp=temp->next;
+		newnode=(struct Node *)malloc(sizeof(struct Node));
+		newnode->next=temp->next;
+		newnode->data=data;
+		temp->next=newnode;
+	}
+}
+
+void display(struct Node* node){
+    //as linked list will end when Node is Null
+    while(node!=NULL){
+        printf("%d ",node->data);
+        node = node->next;
+    }
+    printf("\n");
+}
