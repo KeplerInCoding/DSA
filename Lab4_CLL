@@ -302,6 +302,127 @@ void main(){
 2-	Fill in the missing code in the below function deleteAtPositionInDCLL(NODE first, int pos), which deletes a node at the specified position of Doubly Circular Linked List.
 
 
+[9:51 am, 30/11/2022] Umesh Sir(pps): //File Name: DoublyCircularLL7.c
+//==================================
+#include <stdio.h>
+#include <stdlib.h>
+#include "DelAtPositionInDCLL.c"
+
+void main() {
+	NODE first = NULL;
+	int x, op, pos;
+	while(1) {
+		printf("1.Insert At End 2.Delete at Position 3.Traverse the List 4.Exit\n");
+		printf("Enter your option : ");
+		scanf("%d", &op);
+		switch(op) {
+			case 1:	printf("Enter an element : ");
+					scanf("%d", &x);
+					first = insertAtEndInDCLL(first, x);
+					break;
+			case 2:	if (first == NULL) {
+						printf("Double Circular Linked List is empty so deletion is not possible\n");
+					} else {
+						printf("Enter position : ");
+						scanf("%d", &pos);
+						if (pos <= 0)
+							printf("No such position in DCLL so deletion is not possible\n");
+						else
+							first = deleteAtPositionInDCLL(first, pos);
+					}
+					break;
+			case 3:	if (first == NULL) {
+						printf("Doubly Circular Linked List is empty\n");
+					} else {
+						printf("The elements in DCLL are : ");
+						traverseListInDCLL(first);
+					}
+					break;
+			case 4:	exit(0);
+		}
+}
+//File Name: DelAtPositionInDCLL.c
+//==================================
+struct node {
+	int data;
+	struct node *prev;
+	struct node *next;
+};
+typedef struct node *NODE;
+
+NODE createnode(int element) 
+{
+	NODE temp;
+	temp = (NODE)malloc(sizeof(struct node));
+	temp -> prev = NULL;
+	temp->data = element;
+	temp -> next = NULL;
+	return temp;
+}
+
+void traverseListInDCLL(NODE first)
+{
+	NODE lastNode = first;
+	do {
+		printf("%d <--> ",lastNode -> data);
+		lastNode = lastNode -> next;
+	} while (lastNode != first);	
+	printf("\n");
+}
+
+NODE deleteAtPositionInDCLL(NODE first, int pos) 
+{
+	NODE ptr;
+	ptr = first;
+	int count = 1;
+	while(count!=pos)
+	{
+		if(ptr->next!=first)
+		{
+			ptr = ptr->next;
+			count++;
+		}
+		else
+		{
+			printf("No such position in DCLL so deletion is not possible\n");
+			return first;
+		}
+	}
+	ptr->prev->next = ptr->next;
+	if(ptr==first)
+		first = first->next;
+	
+	printf("The deleted element from DCLL : %d\n",ptr->data);
+
+	return first;
+}
+
+NODE insertAtEndInDCLL(NODE first, int x) 
+{
+	NODE temp;
+	temp = createnode(x);
+	if(first==NULL)
+	{
+		first = temp;
+		temp->prev = first;
+		temp->next = first;
+		return first;
+	}
+	else
+	{
+		NODE ptr;
+		ptr = first;
+		while(ptr->next!=first)
+			ptr = ptr->next;
+			
+		temp->prev = ptr;
+		ptr->next = temp;
+		temp->next = first;
+		first->prev = temp;
+		return first;
+	}
+}
+
 
 3-	Fill in the missing code in the below program to add two polynomials using linked lists.
 
