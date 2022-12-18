@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node{
+	int data;
+	struct node *left, *right;
+};
+
+struct node* createNode(int value)
+{
+	struct node* newNode=(struct node*)malloc(sizeof(struct node));
+	newNode->data=value;
+	newNode->left=NULL;
+	newNode->right=NULL;
+	return newNode;
+}
+
+struct node* insertLeft(struct node* root, int value)
+{
+	struct node* newNode=createNode(value);
+	root->left=newNode;
+	return newNode;
+}
+
+struct node* insertRight(struct node* root, int value)
+{
+	struct node* newNode=createNode(value);
+	root->right=newNode;
+	return newNode;
+}
+
+void inorderTraversal(struct node* root)
+{
+	if(root==NULL) return;
+
+	inorderTraversal(root->left);
+	printf("%d -> ",root->data);
+	inorderTraversal(root->right);
+}
+
+void preorderTraversal(struct node* root)
+{
+	if(root==NULL) return;
+
+	printf("%d -> ",root->data);
+	preorderTraversal(root->left);
+	preorderTraversal(root->right);
+}
+
+void postorderTraversal(struct node* root)
+{
+	if(root==NULL) return;
+
+	postorderTraversal(root->left);
+	postorderTraversal(root->right);
+	printf("%d -> ",root->data);
+}
+
+void main()
+{
+	struct node* a=createNode(20);
+	struct node* b=insertLeft(a,10);
+	struct node* c=insertRight(a,12);
+	struct node* d=insertLeft(b,5);
+	struct node* e=insertRight(b,7);
+	struct node* f=insertLeft(d,3);
+	struct node* l=insertRight(c,17);
+	struct node* m=insertRight(l,6);
+
+	printf("\nInorder Traversal:\n");
+	inorderTraversal(a);
+
+	printf("\nPreorder Traversal:\n");
+	preorderTraversal(a);
+
+	printf("\nPostorder Traversal:\n");
+	postorderTraversal(a);
+}
