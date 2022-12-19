@@ -76,3 +76,16 @@ void main()
 	printf("\nPostorder Traversal:\n");
 	postorderTraversal(a);
 }
+
+
+// binary tree insertion
+// struct node* insertNode(struct node *root, int value)
+// {
+// 	if(root==NULL)
+// 	return createNode(value);
+// 	if(root->data>value)
+// 	root->left=insertNode(root->left, value);
+// 	else if(root->data<value)
+// 	root->right=insertNode(root->right, value);
+// 	return root;
+// }
