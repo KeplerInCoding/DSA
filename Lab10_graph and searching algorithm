@@ -1,0 +1,475 @@
+DS using C - Lab - 10 (Graphs & Searching Algorithms)
+
+
+31906 - Lab Work - Write a C program to implement BFS algorithm for a given graph
+
+Solution :-
+GraphsBFS.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 99
+struct node {
+	struct node *next;
+	int vertex;
+};
+typedef struct node * GNODE;
+GNODE graph[20];   
+int visited[20];
+int queue[MAX], front = -1,rear = -1;
+int n;
+
+void insertQueue(int vertex) {
+	if(rear == MAX-1)
+		printf("Queue Overflow.\n");
+	else {
+		if(front == -1)
+			front = 0;
+		rear = rear+1;
+		queue[rear] = vertex ;
+	}
+}
+ 
+int isEmptyQueue() {
+	if(front == -1 || front > rear)
+		return 1;
+	else
+		return 0;
+}
+ 
+int deleteQueue() {
+	int deleteItem;
+	if(front == -1 || front > rear) {
+		printf("Queue Underflow\n");
+		exit(1);
+	}
+	deleteItem = queue[front];
+	front = front+1;
+	return deleteItem;
+}
+
+void BFS(int v) {
+	int w;
+	insertQueue(v);
+	while(!isEmptyQueue()) {
+		v = deleteQueue( );
+		printf("\n%d",v);
+		visited[v]=1;
+		GNODE g = graph[v];
+		for(;g!=NULL;g=g->next) {
+			w=g->vertex;
+			if(visited[w]==0) {
+				insertQueue(w);
+				visited[w]=1;
+			}
+		}
+	}
+}
+
+void main() {
+	int N, E, s, d, i, j, v;
+	GNODE p, q;
+	printf("Enter the number of vertices : ");
+	scanf("%d",&N);
+	printf("Enter the number of edges : ");
+	scanf("%d",&E);
+	for(i=1;i<=E;i++) {
+		printf("Enter source : ");
+		scanf("%d",&s);
+		printf("Enter destination : ");
+		scanf("%d",&d);
+		q=(GNODE)malloc(sizeof(struct node));
+		q->vertex=d;
+		q->next=NULL;
+		if(graph[s]==NULL) {
+			graph[s]=q;
+		} else {
+			p=graph[s];
+			while(p->next!=NULL)
+				p=p->next;
+			p->next=q;
+		}
+	}
+	for(i=1;i<=n;i++)
+		visited[i]=0;
+	printf("Enter Start Vertex for BFS : ");
+	scanf("%d", &v);
+	printf("BFS of graph : ");
+	BFS(v);
+	printf("\n");
+}
+
+
+35623 - Lab Work - Implementing a directed graph and its operations using adjacency matrix
+
+Solution :-
+GraphsMain1.c
+
+#include<stdio.h>
+#include<stdlib.h>
+#include "GraphsAdjacencyMatrixDirectedGraph.c"
+
+void main() {
+	int x, op;
+	int N,E,s,d,i,j;
+	printf("Enter the number of vertices : ");
+	scanf("%d",&N);
+	printf("Enter the number of edges : ");
+	scanf("%d",&E);
+	for(i=1;i<=E;i++) {
+		printf("Enter source : ");
+		scanf("%d",&s);
+		printf("Enter destination : ");
+		scanf("%d",&d);
+		if(s > N || d > N || s<=0 || d<=0) {
+			printf("Invalid index. Try again.\n");
+			i--;
+			continue;
+		} else {
+			graph[s][d] = 1;
+		}
+	}
+	while(1)
+	{
+		printf("1.Insert vertex 2.Insert edge 3.Delete vertex 4.Delete edge 5.Print adjacency matrix 6.Exit\n");
+		printf("Enter your option : ");
+		scanf("%d", &op);
+		switch(op) {
+			case 1:	
+					insertVertex(&N);
+					break;
+			case 2:
+					insertEdge(&N);
+					break;
+			case 3:
+					deleteVertex(&N);
+					break;
+			case 4:
+					deleteEdge(&N);
+					break;
+			case 5:
+					print(&N);
+					break;
+			case 6:
+					exit(0);
+		}
+	}
+}
+
+Solution :-
+GraphsAdjacencyMatrixDirectedGraph.c
+
+int graph [20][20];
+void print(int * N) {
+	int i,j;
+	if(*N == 0) {
+		printf("Graph is empty.\n");
+		return;
+	}
+	for(i=1;i<=*N;i++) {
+		for(j=1;j<=*N;j++) {
+			printf("%d\t",graph[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+void insertVertex(int * N) {
+	int x[20],s,y[20],t,i=0;
+	*N = *N + 1;
+	printf("Enter the number edges from the existing vertices to new vertex : ");
+	scanf("%d",&s);
+	printf("Enter the source of each edge : ");
+	for(i=1;i<=s;i++) {
+		scanf("%d",&x[i]);
+	}
+	printf("Enter the number edges from the new vertex to existing vertices : ");
+	scanf("%d",&t);
+	printf("Enter the destination of each edge : ");
+	for(i=1;i<=t;i++) {
+		scanf("%d",&y[i]);
+	}
+	for(i=1;i<=*N;i++) {
+		graph[i][*N] = 0;
+		graph[*N][i] = 0;
+	}
+	for(i=1;i<=s;i++) {
+		if(x[i]<=*N) {
+			graph[x[i]][*N] = 1;
+		}
+		else {
+			printf("Invalid vertex.\n");
+		}
+	}
+	for(i=1;i<=t;i++) {
+		if(y[i]<= *N) {
+			graph[*N][y[i]] = 1;
+		}
+		else {
+			printf("Invalid vertex.\n");
+		}
+	}
+	printf("After inserting vertex the adjacency matrix is : \n");
+	print(N);
+}
+void insertEdge(int *N) {
+	int v1,v2;
+	printf("Enter the source vertex of the edge : ");
+	scanf("%d",&v1);
+	printf("Enter the destination vertex of the edge : ");
+	scanf("%d",&v2);
+	if(v1 <= *N && v2 <= *N) {
+		graph[v1][v2] = 1;
+	} else {
+		printf("Invalid vertex.\n");
+		return;
+	}
+	printf("After inserting edge the adjacency matrix is : \n");
+	print(N);
+}
+void deleteVertex(int *N) {
+	int vd,i,j,k;
+	if(*N == 0) {
+		printf("Graph is empty.\n");
+		return;
+	}
+	printf("Enter the vertex to be deleted : ");
+	scanf("%d",&vd);
+	if(vd > *N) {
+		printf("Invalid vertex.\n");
+		return;
+	}
+	j = vd;
+	for(i = j ; i<= *N-1 ; i++) {
+		for(k = 1 ; k <= *N ; k++ ) {
+			graph[k][i] = graph [k][i+1];
+		}
+	}
+	for(i = j ; i <= *N-1; i++) {
+		for(k = 1 ; k <= *N ; k++) {
+			graph[i][k] = graph [i+1][k];
+		}
+	}
+	*N = *N - 1;
+	printf("After deleting vertex the adjacency matrix is : \n");
+	print(N);
+}
+void deleteEdge(int *N) {
+	int v1,v2;
+	printf("Enter the source vertex of the edge : ");
+	scanf("%d",&v1);
+	printf("Enter the destination vertex of the edge : ");
+	scanf("%d",&v2);
+	if(v1 <= *N && v2 <= *N) {
+		if(graph[v1][v2] == 0) {
+			printf("Edge does not exist.\n");
+			return;
+		}
+		graph[v1][v2] = 0;
+	} else {
+		printf("Invalid vertex.\n");
+		return;
+	}
+	printf("After deleting edge the adjacency matrix is : \n");
+	print(N);
+}
+
+31905 - Lab Work - Write a C Program to implement the DFS algorithm for a given graph.
+
+Solution :-
+GraphsDFS.c
+
+#include<stdio.h>
+#include<stdlib.h>
+struct node {
+    struct node *next;
+    int vertex;
+};
+typedef struct node * GNODE;
+GNODE graph[20];   
+int visited[20];
+int n;
+
+void DFS(int i) {
+    GNODE p;
+    printf("\n%d",i);
+    p=graph[i];
+    visited[i]=1;
+    while(p!=NULL) {
+       i=p->vertex;
+       if(!visited[i])
+            DFS(i);
+        p=p->next;
+    }
+    
+}
+
+void main() {
+    int N,E,i,s,d,v;
+    GNODE q,p;
+    printf("Enter the number of vertices : ");
+	scanf("%d",&N);
+	printf("Enter the number of edges : ");
+	scanf("%d",&E);
+	for(i=1;i<=E;i++) {
+		printf("Enter source : ");
+		scanf("%d",&s);
+		printf("Enter destination : ");
+		scanf("%d",&d);
+		q=(GNODE)malloc(sizeof(struct node));
+    	q->vertex=d;
+    	q->next=NULL;
+    	if(graph[s]==NULL)
+        	graph[s]=q;
+        else {
+        	p=graph[s];
+        	while(p->next!=NULL)
+            	p=p->next;
+    		p->next=q;
+    	}
+	}
+    for(i=0;i<n;i++)
+        visited[i]=0;
+    printf("Enter Start Vertex for DFS : ");
+    scanf("%d", &v);
+    printf("DFS of graph : ");
+    DFS(v);
+    printf("\n");
+}
+
+
+34087 - Lab Work - Write a C program for constructing a minimum cost spanning tree of a graph using Prim's Algorithm
+
+Solution :-
+PrimsMinimumSpanningTree.c
+
+#include<stdio.h>
+#include<conio.h>
+int a,b,u,v,n,i,j,ne=1,e,s,d,w;
+int visited[10]={0},min,mincost=0,cost[10][10];
+void prims() {
+	visited[1]=1;
+	while(ne < n) {
+		min = 999;
+		for(i=1;i<=n;i++) {
+			if(visited[i] == 1) {
+				for(j=1;j<=n;j++) {
+					if(visited[j] == 0 && cost[i][j] < min ) {
+						min = cost[i][j];
+						a = i;
+						b = j;
+					}
+				}
+			}
+		}
+		printf("Edge cost from %d to %d : %d\n",a,b,cost[a][b]);
+		ne++;
+		mincost+=cost[a][b];
+		visited[b]=1;
+		cost[a][b]=cost[b][a]=999;
+	}
+	printf("Minimum cost of spanning tree = %d\n",mincost);
+}
+void main() {
+	printf("Enter the number of vertices : ");
+	scanf("%d",&n);
+	printf("Enter the number of edges : ");
+	scanf("%d",&e);
+	for(i=1;i<=e;i++) {
+		printf("Enter source : ");
+		scanf("%d",&s);
+		printf("Enter destination : ");
+		scanf("%d",&d);
+		printf("Enter weight : ");
+		scanf("%d",&w);
+		if(s<=0 || d<=0 || s> n || d > n || w < 0 ) {
+			printf("Invalid data.Try again.\n");
+			i--;
+			continue;
+		}
+		cost[s][d]=w;
+		cost[d][s]=w;
+	}
+	for(i=1;i<=n;i++) {
+	    for(j=1;j<=n;j++) {
+			if(cost[i][j]==0)
+			    cost[i][j]=999;
+	    }
+	}
+	printf("The edges of Minimum Cost Spanning Tree are : \n");
+	prims();
+}
+
+
+34088 - Lab Work - C Program to implement Floyd - Warshall's  Algorithm.
+
+Solution :-
+Warshall.c
+
+#include<stdio.h>
+#define INF 99999
+int graph[20][20];
+int N,E;
+void printSolution(int dist[][N]);
+void floydWarshall () {
+	int dist[N][N], i, j, k;
+	for (i = 1; i <= N; i++)
+		for (j = 1; j <= N; j++) {
+			if (i == j) {
+				dist[i][j] = 0;
+			} else {
+				dist[i][j] = graph[i][j];
+			}
+		}
+			
+	for (k = 1; k <= N; k++) {
+		for (i = 1; i <= N; i++) {
+			for (j = 1; j <= N; j++) {
+				if (dist[i][k] + dist[k][j] < dist[i][j])
+					dist[i][j] = dist[i][k] + dist[k][j];
+			}
+		}
+	}
+	printSolution(dist);
+}
+void printSolution(int dist[][N]) {
+	printf ("The following matrix shows the shortest distances between all pairs of the vertices.\n");
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++) {
+			if (dist[i][j] == INF)
+				printf("%5s", "INF");
+			else
+				printf ("%5d", dist[i][j]);
+		}
+		printf("\n");
+	}
+}
+int main() {
+	int s,d,w,i,j;
+	printf("Enter the number of vertices : ");
+	scanf("%d",&N);
+	printf("Enter the number of edges : ");
+	scanf("%d",&E);
+	for(i = 1 ; i <= N;i++) {
+		for(j = 1 ; j <= N ;j++ ) {
+			graph[i][j] = INF;
+		}
+	}
+	for(i=1;i<=E;i++) {
+		printf("Enter source : ");
+		scanf("%d",&s);
+		printf("Enter destination : ");
+		scanf("%d",&d);
+		printf("Enter weight : ");
+		scanf("%d",&w);
+		if(s > N || d > N || s<=0 || d<=0) {
+			printf("Invalid index. Try again.\n");
+			i--;
+			continue;
+		} else {
+			graph[s][d] = w;
+		}
+	}
+	floydWarshall();
+	return 0;
+}
