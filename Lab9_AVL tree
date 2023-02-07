@@ -1,0 +1,801 @@
+                                                 DS using C - Lab - 9 (AVL Tree)
+
+34582 - Lab Work - Write a C program to perform the Implementation of AVL Tree - Creation and Display.
+
+Solution :-
+AVLTreeMain1.c
+
+struct node {
+  int data;
+  struct node *left, *right;
+  int ht;
+};
+
+typedef struct node *AVLNODE;
+AVLNODE createNodeInAVL(int item) {
+  AVLNODE temp = (AVLNODE)malloc(sizeof(struct node));
+  temp->data = item;
+  temp->left = temp->right = NULL;
+  return temp;
+}
+
+int height(AVLNODE root) {
+  int lh, rh;
+  if (root == NULL) return (0);
+  if (root->left == NULL)
+    lh = 0;
+  else
+    lh = 1 + root->left->ht;
+  if (root->right == NULL)
+    rh = 0;
+  else
+    rh = 1 + root->right->ht;
+  if (lh > rh) return (lh);
+  return (rh);
+}
+
+AVLNODE rotateRight(AVLNODE x) {
+  AVLNODE y;
+  y = x->left;
+  x->left = y->right;
+  y->right = x;
+  x->ht = height(x);
+  y->ht = height(y);
+  return (y);
+}
+
+AVLNODE rotateLeft(AVLNODE x) {
+  AVLNODE y;
+  y = x->right;
+  x->right = y->left;
+  y->left = x;
+  x->ht = height(x);
+  y->ht = height(y);
+  return (y);
+}
+AVLNODE LL(AVLNODE root) {
+  root = rotateLeft(root);
+  return (root);
+}
+AVLNODE RR(AVLNODE root) {
+  root = rotateRight(root);
+  return (root);
+}
+AVLNODE LR(AVLNODE root) {
+  root->left = rotateLeft(root->left);
+  root = rotateRight(root);
+  return (root);
+}
+AVLNODE RL(AVLNODE root) {
+  root->right = rotateRight(root->right);
+  root = rotateLeft(root);
+  return (root);
+}
+int balancefactor(AVLNODE root) {
+  int lh, rh;
+  if (root == NULL) return (0);
+  if (root->left == NULL)
+    lh = 0;
+  else
+    lh = 1 + root->left->ht;
+  if (root->right == NULL)
+    rh = 0;
+  else
+    rh = 1 + root->right->ht;
+  return (lh - rh);
+}
+void inorderInAVL(AVLNODE root) {
+  if (root != NULL) {
+    inorderInAVL(root->left);
+    printf("%d(%d) ", root->data, balancefactor(root));
+    inorderInAVL(root->right);
+  }
+}
+void preorderInAVL(AVLNODE root) {
+  if (root != NULL) {
+  	printf("%d(%d) ", root->data, balancefactor(root));
+    preorderInAVL(root->left);
+    preorderInAVL(root->right);
+  }
+}
+void postorderInAVL(AVLNODE root) {
+  if (root != NULL) {
+    postorderInAVL(root->left);
+    postorderInAVL(root->right);
+    printf("%d(%d) ", root->data, balancefactor(root));
+  }
+}
+
+AVLNODE insertNodeInAVL(AVLNODE root, int x) {
+  if (root == NULL) {
+    root = createNodeInAVL(x);
+    printf("Successfully inserted.\n");
+  } else if (x > root->data) {
+    root->right = insertNodeInAVL(root->right, x);
+    if (balancefactor(root) == -2)
+      if (x > root->right->data)
+        root = LL(root);
+      else
+        root = RL(root);
+  } else if (x < root->data) {
+    root->left = insertNodeInAVL(root->left, x);
+    if (balancefactor(root) == 2)
+      if (x < root->left->data)
+        root = RR(root);
+      else
+        root = LR(root);
+  } else {
+    printf("Element %d already exists.\n", x);
+  }
+  root->ht = height(root);
+  return (root);
+}
+
+
+11111 - Lab Work - Write a C program to implement the following operations of threaded binary tree.
+•	insertion
+•	deletion
+•	search
+•	traversal
+
+Solution :-
+ThreadeBinaryTreeMain.c
+
+#define true 1
+#define false 0
+#define MAX_VALUE 65536
+struct ThreadedBinaryNode {
+	int data;
+    struct ThreadedBinaryNode * left, *right;
+    // 1- indicates a thread, 0- indicates not a thread.
+    int leftThread, rightThread;
+};
+typedef struct ThreadedBinaryNode * TBNODE;
+TBNODE root = NULL;
+void insert(int ele) {
+	TBNODE p = root;
+	for (;;) {
+		if (p->data < ele) {
+			if (p->rightThread)
+				break;
+			p = p->right;
+		} else if (p->data > ele) {
+			if (p->leftThread)
+				break;
+			p = p->left;
+		} else {    /* redundant key */
+			printf("Duplicates are not allowed.\n");
+			return;
+		}
+	}
+	TBNODE tmp = (TBNODE)malloc(sizeof(struct ThreadedBinaryNode));
+	tmp->data = ele;
+	tmp->rightThread = tmp->leftThread = true;
+	if (p->data < ele) {
+		tmp->right = p->right;
+		tmp->left = p;
+		p->right = tmp;
+		p->rightThread = false;
+	} else {
+		tmp->right = p;
+		tmp->left = p->left;
+		p->left = tmp;
+		p->leftThread = false;
+	}
+}
+void delete(int ele) {
+	TBNODE dest = root->left,p = root;
+	for (;;) {
+		if (dest->data < ele) {
+			if (dest->rightThread) {
+				printf("Cannot find %d in the threaded binary tree.\n",ele);
+				return;
+			}
+			p = dest;
+			dest = dest->right;
+		} else if (dest->data > ele) {
+			if (dest->leftThread) {
+				printf("Cannot find %d in the threaded binary tree.\n",ele);
+				return;
+			}
+			p = dest;
+			dest = dest->left;
+		} else {
+            break;
+		}
+	}
+	TBNODE target = dest;
+	if (!dest->rightThread && !dest->leftThread) {
+		/* dest has two children*/
+		p = dest;
+		/* find largest node at left child */
+		target = dest->left;
+		while (!target->rightThread) {
+			p = target;
+			target = target->right;
+		}
+		/* using replace mode*/
+		dest->data = target->data;
+	}
+	if (p->data >= target->data) {
+		if (target->rightThread && target->leftThread) {
+			p->left = target->left;
+			p->leftThread = true;
+		}
+		else if (target->rightThread) {
+			TBNODE largest = target->left;
+			while (!largest->rightThread){
+				largest = largest->right;
+			}
+			largest->right = p;
+			p->left = target->left;
+		} else {
+			TBNODE smallest = target->right;
+			while (!smallest->leftThread) {
+				smallest = smallest->left;
+			}
+			smallest->left = target->left;
+			p->left = target->right;
+		}
+	} else {
+		if (target->rightThread && target->leftThread) {
+			p->right = target->right;
+			p->rightThread = true;
+		} else if (target->rightThread) {
+			TBNODE largest = target->left;
+			while (!largest->rightThread) {
+				largest = largest->right;
+			}
+			largest->right =  target->right;
+			p->right = target->left;
+		} else {
+			TBNODE smallest = target->right;
+			while (!smallest->leftThread) {
+				smallest = smallest->left;
+			}
+			smallest->left = p;
+			p->right = target->right;
+		}
+	}
+}
+int search(int ele) {
+	TBNODE tmp = root->left;
+	for (;;) {
+		if (tmp->data < ele) {
+			if (tmp->rightThread)
+				return false;
+			tmp = tmp->right;
+		} else if (tmp->data > ele) {
+			if (tmp->leftThread)
+				return false;
+			tmp = tmp->left;
+		} else {
+			return true;
+		}
+	}
+}
+void traverse() {
+	TBNODE tmp = root,p;
+	for (;;) {
+		p = tmp;
+		tmp = tmp->right;
+		if (!p->rightThread) {
+			while (!tmp->leftThread) {
+				tmp = tmp->left;
+			}
+		}
+		if (tmp == root)
+			break;
+		printf("%d ",tmp->data);
+	}
+	printf("\n");
+}
+
+
+
+34585 - Lab Work - Write a C program to implement the Traversal operation in threaded binary tree.
+
+Solution :-
+ThreadedBinaryTreeMain.c
+
+#define true 1
+#define false 0
+#define MAX_VALUE 65536
+struct ThreadedBinaryNode {
+	int data;
+    struct ThreadedBinaryNode * left, *right;
+    // 1- indicates a thread, 0- indicates not a thread.
+    int leftThread, rightThread;
+};
+typedef struct ThreadedBinaryNode * TBNODE;
+TBNODE root = NULL;
+void insert(int ele) {
+	TBNODE p = root;
+	for (;;) {
+		if (p->data < ele) {
+			if (p->rightThread)
+				break;
+			p = p->right;
+		} else if (p->data > ele) {
+			if (p->leftThread)
+				break;
+			p = p->left;
+		} else {    /* redundant key */
+			printf("Duplicates are not allowed.\n");
+			return;
+		}
+	}
+	TBNODE tmp = (TBNODE)malloc(sizeof(struct ThreadedBinaryNode));
+	tmp->data = ele;
+	tmp->rightThread = tmp->leftThread = true;
+	if (p->data < ele) {
+		tmp->right = p->right;
+		tmp->left = p;
+		p->right = tmp;
+		p->rightThread = false;
+	} else {
+		tmp->right = p;
+		tmp->left = p->left;
+		p->left = tmp;
+		p->leftThread = false;
+	}
+}
+void traverse() {
+	TBNODE tmp = root,p;
+	for (;;) {
+		p = tmp;
+		tmp = tmp->right;
+		if (!p->rightThread) {
+			while (!tmp->leftThread) {
+				tmp = tmp->left;
+			}
+		}
+		if (tmp == root)
+			break;
+		printf("%d ",tmp->data);
+	}
+	printf("\n");
+}
+
+
+
+34583 - Lab Work - Write a C program which results the Implementation of Insertion operation in AVL Tree
+
+Solution :-
+AVLTreeMain1.c
+
+struct node {
+  int data;
+  struct node *left, *right;
+  int ht;
+};
+
+typedef struct node *AVLNODE;
+AVLNODE createNodeInAVL(int item) {
+  AVLNODE temp = (AVLNODE)malloc(sizeof(struct node));
+  temp->data = item;
+  temp->left = temp->right = NULL;
+  return temp;
+}
+
+int height(AVLNODE root) {
+  int lh, rh;
+  if (root == NULL) return (0);
+  if (root->left == NULL)
+    lh = 0;
+  else
+    lh = 1 + root->left->ht;
+  if (root->right == NULL)
+    rh = 0;
+  else
+    rh = 1 + root->right->ht;
+  if (lh > rh) return (lh);
+  return (rh);
+}
+
+AVLNODE rotateRight(AVLNODE x) {
+  AVLNODE y;
+  y = x->left;
+  x->left = y->right;
+  y->right = x;
+  x->ht = height(x);
+  y->ht = height(y);
+  return (y);
+}
+
+AVLNODE rotateLeft(AVLNODE x) {
+  AVLNODE y;
+  y = x->right;
+  x->right = y->left;
+  y->left = x;
+  x->ht = height(x);
+  y->ht = height(y);
+  return (y);
+}
+AVLNODE LL(AVLNODE root) {
+  root = rotateLeft(root);
+  return (root);
+}
+AVLNODE RR(AVLNODE root) {
+  root = rotateRight(root);
+  return (root);
+}
+AVLNODE LR(AVLNODE root) {
+  root->left = rotateLeft(root->left);
+  root = rotateRight(root);
+  return (root);
+}
+AVLNODE RL(AVLNODE root) {
+  root->right = rotateRight(root->right);
+  root = rotateLeft(root);
+  return (root);
+}
+int balancefactor(AVLNODE root) {
+  int lh, rh;
+  if (root == NULL) return (0);
+  if (root->left == NULL)
+    lh = 0;
+  else
+    lh = 1 + root->left->ht;
+  if (root->right == NULL)
+    rh = 0;
+  else
+    rh = 1 + root->right->ht;
+  return (lh - rh);
+}
+void inorderInAVL(AVLNODE root) {
+  if (root != NULL) {
+    inorderInAVL(root->left);
+    printf("%d(%d) ", root->data, balancefactor(root));
+    inorderInAVL(root->right);
+  }
+}
+AVLNODE insertNodeInAVL(AVLNODE root, int x) {
+  if (root == NULL) {
+    root = createNodeInAVL(x);
+    printf("Successfully inserted.\n");
+  } else if (x > root->data) {
+    root->right = insertNodeInAVL(root->right, x);
+    if (balancefactor(root) == -2)
+      if (x > root->right->data)
+        root = LL(root);
+      else
+        root = RL(root);
+  } else if (x < root->data) {
+    root->left = insertNodeInAVL(root->left, x);
+    if (balancefactor(root) == 2)
+      if (x < root->left->data)
+        root = RR(root);
+      else
+        root = LR(root);
+  } else {
+    printf("Element %d already exists.\n", x);
+  }
+  root->ht = height(root);
+  return (root);
+}
+
+29385 - Lab Work - Huffman coding
+
+Solution :-
+haffman.c
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_TREE_HT 100
+
+struct MinHeapNode {
+	char data;
+	unsigned freq;
+	struct MinHeapNode *left, *right;
+};
+
+struct MinHeap {
+	unsigned size;
+	unsigned capacity;
+	struct MinHeapNode** array;
+};
+
+struct MinHeapNode* newNode(char data, unsigned freq) {
+	struct MinHeapNode* temp = (struct MinHeapNode*)malloc(sizeof(struct MinHeapNode));
+	temp->left = temp->right = NULL;
+	temp->data = data;
+	temp->freq = freq;
+	return temp;
+}
+
+struct MinHeap* createMinHeap(unsigned capacity) {
+	struct MinHeap* minHeap = (struct MinHeap*)malloc(sizeof(struct MinHeap));
+	minHeap->size = 0;
+	minHeap->capacity = capacity;
+	minHeap->array = (struct MinHeapNode**)malloc(minHeap->capacity * sizeof(struct MinHeapNode*));
+	return minHeap;
+}
+
+void swapMinHeapNode(struct MinHeapNode** a, struct MinHeapNode** b) {
+
+	struct MinHeapNode* t = *a;
+	*a = *b;
+	*b = t;
+}
+
+void minHeapify(struct MinHeap* minHeap, int idx) {
+	int smallest = idx;
+	int left = 2 * idx + 1;
+	int right = 2 * idx + 2;
+	if (left < minHeap->size && minHeap->array[left]->freq < minHeap->array[smallest]->freq)
+		smallest = left;
+	if (right < minHeap->size && minHeap->array[right]->freq < minHeap->array[smallest]->freq)
+		smallest = right;
+	if (smallest != idx) {
+		swapMinHeapNode(&minHeap->array[smallest], &minHeap->array[idx]);
+		minHeapify(minHeap, smallest);
+	}
+}
+
+int isSizeOne(struct MinHeap* minHeap) {
+	return (minHeap->size == 1);
+}
+
+struct MinHeapNode* extractMin(struct MinHeap* minHeap) {
+	struct MinHeapNode* temp = minHeap->array[0];
+	minHeap->array[0] = minHeap->array[minHeap->size - 1];
+	--minHeap->size;
+	minHeapify(minHeap, 0);
+	return temp;
+}
+
+void insertMinHeap(struct MinHeap* minHeap, struct MinHeapNode* minHeapNode) {
+	++minHeap->size;
+	int i = minHeap->size - 1;
+	while (i && minHeapNode->freq < minHeap->array[(i - 1) / 2]->freq) {
+		minHeap->array[i] = minHeap->array[(i - 1) / 2];
+		i = (i - 1) / 2;
+	}
+
+	minHeap->array[i] = minHeapNode;
+}
+
+void buildMinHeap(struct MinHeap* minHeap) {
+	int n = minHeap->size - 1;
+	int i;
+	for (i = (n - 1) / 2; i >= 0; --i)
+		minHeapify(minHeap, i);
+}
+
+void printArr(int arr[], int n) {
+	int i;
+	for (i = 0; i < n; ++i)
+		printf("%d", arr[i]);
+	printf("\n");
+}
+
+int isLeaf(struct MinHeapNode* root) {
+	return !(root->left) && !(root->right);
+}
+
+struct MinHeap* createAndBuildMinHeap(char data[], int freq[], int size) {
+	struct MinHeap* minHeap = createMinHeap(size);
+	for (int i = 0; i < size; ++i)
+		minHeap->array[i] = newNode(data[i], freq[i]);
+	minHeap->size = size;
+	buildMinHeap(minHeap);
+	return minHeap;
+}
+
+struct MinHeapNode* buildHuffmanTree(char data[], int freq[], int size) {
+	struct MinHeapNode *left, *right, *top;
+	struct MinHeap* minHeap = createAndBuildMinHeap(data, freq, size);
+	while (!isSizeOne(minHeap)) {
+		left = extractMin(minHeap);
+		right = extractMin(minHeap);
+		top = newNode('$', left->freq + right->freq);
+		top->left = left;
+		top->right = right;
+		insertMinHeap(minHeap, top);
+	}
+	return extractMin(minHeap);
+}
+
+void printCodes(struct MinHeapNode* root, int arr[], int top) {
+	if (root->left) {
+		arr[top] = 0;
+		printCodes(root->left, arr, top + 1);
+	}
+	if (root->right) {
+		arr[top] = 1;
+		printCodes(root->right, arr, top + 1);
+	}
+	if (isLeaf(root)) {
+		printf("%c --> ", root->data);
+		printArr(arr, top);
+	}
+}
+
+void HuffmanCodes(char data[], int freq[], int size) {
+	struct MinHeapNode* root = buildHuffmanTree(data, freq, size);
+	int arr[MAX_TREE_HT], top = 0;
+	printCodes(root, arr, top);
+}
+
+int main() {
+	char arr[50];
+	int frequency[50],i, n;
+	printf("Enter number of characters: ");
+	scanf("%d", &n);
+	printf("Enter %d characters:\n", n);
+	for(i = 0; i < n; i++) {
+		scanf("%s", &arr[i]);
+	}
+	printf("Enter frequency of each character:\n");
+	for(i = 0; i < n; i++) {
+		scanf("%d", &frequency[i]);
+	}
+	int size = n / sizeof(arr[0]);
+	printf("Char | Huffman code\n");
+	// printf("\n--------------------\n");
+	HuffmanCodes(arr, frequency, size);
+}
+
+
+34584 - Lab Work - Write a C program which results the Implementation of Deletion operation in AVL Tree
+
+Solution :-
+AVLTreeDeletion.c
+
+struct node {
+  int data;
+  struct node *left, *right;
+  int ht;
+};
+
+typedef struct node *AVLNODE;
+AVLNODE createNodeInAVL(int item) {
+  AVLNODE temp = (AVLNODE)malloc(sizeof(struct node));
+  temp->data = item;
+  temp->left = temp->right = NULL;
+  return temp;
+}
+
+int height(AVLNODE root) {
+  int lh, rh;
+  if (root == NULL) return (0);
+  if (root->left == NULL)
+    lh = 0;
+  else
+    lh = 1 + root->left->ht;
+  if (root->right == NULL)
+    rh = 0;
+  else
+    rh = 1 + root->right->ht;
+  if (lh > rh) return (lh);
+  return (rh);
+}
+
+AVLNODE rotateRight(AVLNODE x) {
+  AVLNODE y;
+  y = x->left;
+  x->left = y->right;
+  y->right = x;
+  x->ht = height(x);
+  y->ht = height(y);
+  return (y);
+}
+
+AVLNODE rotateLeft(AVLNODE x) {
+  AVLNODE y;
+  y = x->right;
+  x->right = y->left;
+  y->left = x;
+  x->ht = height(x);
+  y->ht = height(y);
+  return (y);
+}
+AVLNODE LL(AVLNODE root) {
+  root = rotateLeft(root);
+  return (root);
+}
+AVLNODE RR(AVLNODE root) {
+  root = rotateRight(root);
+  return (root);
+}
+AVLNODE LR(AVLNODE root) {
+  root->left = rotateLeft(root->left);
+  root = rotateRight(root);
+  return (root);
+}
+AVLNODE RL(AVLNODE root) {
+  root->right = rotateRight(root->right);
+  root = rotateLeft(root);
+  return (root);
+}
+int balancefactor(AVLNODE root) {
+  int lh, rh;
+  if (root == NULL) return (0);
+  if (root->left == NULL)
+    lh = 0;
+  else
+    lh = 1 + root->left->ht;
+  if (root->right == NULL)
+    rh = 0;
+  else
+    rh = 1 + root->right->ht;
+  return (lh - rh);
+}
+void inorderInAVL(AVLNODE root) {
+  if (root != NULL) {
+    inorderInAVL(root->left);
+    printf("%d(%d) ", root->data, balancefactor(root));
+    inorderInAVL(root->right);
+  }
+}
+AVLNODE insertNodeInAVL(AVLNODE root, int x) {
+  if (root == NULL) {
+    root = createNodeInAVL(x);
+    printf("Successfully inserted.\n");
+  } else if (x > root->data) {
+    root->right = insertNodeInAVL(root->right, x);
+    if (balancefactor(root) == -2)
+      if (x > root->right->data)
+        root = LL(root);
+      else
+        root = RL(root);
+  } else if (x < root->data) {
+    root->left = insertNodeInAVL(root->left, x);
+    if (balancefactor(root) == 2)
+      if (x < root->left->data)
+        root = RR(root);
+      else
+        root = LR(root);
+  } else {
+    printf("Element %d already exists.\n", x);
+  }
+  root->ht = height(root);
+  return (root);
+}
+
+AVLNODE deleteNodeInAVL(AVLNODE root,int x) {
+	AVLNODE temp;
+	if(root==NULL) {
+		printf("Cannot find %d in the AVL Tree.\n",x);
+		return NULL;
+	}
+	else if(x > root->data) {
+		root->right=deleteNodeInAVL(root->right,x);
+		if(balancefactor(root)==2)
+			if(balancefactor(root->left)>=0)
+				root=LL(root);
+			else
+				root=LR(root);
+	}
+    else if(x<root->data) {
+		root->left=deleteNodeInAVL(root->left,x);
+		if(balancefactor(root)==-2)
+			if(balancefactor(root->right)<=0)
+				root=RR(root);
+			else
+				root=RL(root);
+	}
+	else {
+		if(root->right!=NULL) {  
+			temp=root->right;
+			while(temp->left!= NULL)
+				temp=temp->left;
+			root->data=temp->data;
+			temp->data=x;
+			root->right=deleteNodeInAVL(root->right,x);
+			if(balancefactor(root)==2)
+				if(balancefactor(root->left)>=0)
+					root=LL(root);
+				else
+					root=LR(root);
+		}
+		else {
+			printf("Deleted %d from AVL Tree.\n",x);
+			return(root->left);
+		}
+	}
+	root->ht=height(root);
+	return(root);
+}
