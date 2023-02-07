@@ -1,0 +1,287 @@
+DS using C - Lab - 7 (Binary Tree & Binary Search Tree)
+
+34713 - Lab Work - Write a C program to implement Binary tree using Array
+
+Solution :-
+TreeMain.c
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void updateElement(char *tree, int arraySize, char s, char t) {
+  for (int i = 0; i < arraySize; i++) {
+    if (tree[i] == s) {
+      tree[i] = t;
+    }
+  }
+}
+int setRoot(int dataKey, char *tree) {
+  if (tree[0] != '\0')
+    printf("Root is already available\n");
+  else
+    tree[0] = dataKey;
+  return 0;
+}
+
+int addLeft(char dataKey, int parentIndex, char *tree) {
+  if (tree[parentIndex] == '\0')
+    printf("No parent found\n");
+  else
+    tree[(parentIndex * 2) + 1] = dataKey;
+  return 0;
+}
+
+int addRight(char dataKey, int parentIndex, char *tree) {
+  if (tree[parentIndex] == '\0')
+    printf("No parent found\n");
+  else
+    tree[(parentIndex * 2) + 2] = dataKey;
+  return 0;
+}
+
+int displayTree(char *tree, int arraySize) {
+  for (int i = 0; i < arraySize; i++) {
+    if (tree[i] != '\0') printf("%c ", tree[i]);
+  }
+  return 0;
+}
+
+int deleteNode(char *tree, char dataKey, int arraySize) {
+  int k, l;
+  char lastNode;
+  for (int i = 0; i < arraySize; i++) {
+    if (tree[i] == dataKey) k = i;
+    if (tree[i] != '\0') l = i;
+  }
+  tree[k] = tree[l];
+  tree[l] = '\0';
+}
+
+// Driver Code
+int main() {
+  char *tree;
+  char ch, choice, delNode;
+  printf("Enter the number of nodes: ");
+  int n, index;
+  scanf("%d", &n);
+  int height = round(log2(n) + 1);
+  printf("height: %d\n", height);
+  int arraySize = pow(2, height) - 1;
+  tree = (char *)malloc(arraySize * sizeof(char));
+  memset(tree, '\0', sizeof(char *) * arraySize);
+  printf("Enter the data key in root node: ");
+  scanf(" %c", &ch);
+  setRoot(ch, tree);
+  if (n > 1) {
+    printf("Enter rest of the nodes in the binary tree: \n");
+    for (int i = 1; i < n; i++) {
+      printf("Enter R or r for right and L or l for left side insertion: ");
+      scanf(" %c", &choice);
+      if (choice == 'R' || choice == 'r') {
+        printf("Enter datakey and parent index: ");
+        scanf(" %c", &ch);
+        scanf("%d", &index);
+        addRight(ch, index, tree);
+      } else {
+        printf("Enter datakey and parent index: ");
+        scanf(" %c", &ch);
+        scanf("%d", &index);
+        addLeft(ch, index, tree);
+      }
+    }
+  }
+  printf("Binary tree is:\n");
+  displayTree(tree, arraySize);
+  printf("\nEnter the data element you want to update: ");
+  char s, t;
+  scanf(" %c", &s);
+  scanf(" %c", &t);
+  updateElement(tree, arraySize, s, t);
+  printf("Binary tree is:\n");
+  displayTree(tree, arraySize);
+
+  printf("\nEnter DeleteNode: ");
+  scanf(" %c", &delNode);
+  deleteNode(tree, delNode, arraySize);
+  printf("Tree after deletion\n");
+  displayTree(tree, arraySize);
+  return 0;
+}
+
+34705 - Lab Work - Write a program to create a binary search tree of integers and perform the following operations using linked list.
+1.	Insert a node.
+2.	Delete a node.
+
+Solution :-
+BinarySearchTree.c
+
+// Binary Search Tree insertion and deletion operations
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+  int key;
+  struct node *left, *right;
+};
+
+// Creation
+struct node *newNode(int item) {
+  struct node *temp = (struct node *)malloc(sizeof(struct node));
+  temp->key = item;
+  temp->left = temp->right = NULL;
+  return temp;
+}
+
+// Inorder Traversal using recursion
+void inorder(struct node *root) {
+  if (root != NULL) {
+    // Traverse left
+    inorder(root->left);
+
+    // Traverse root
+    printf("%d ", root->key);
+
+    // Traverse right
+    inorder(root->right);
+  }
+}
+
+void preorder(struct node *root) {
+  if (root != NULL) {
+    // Traverse left
+     printf("%d ", root->key);
+    preorder(root->left);
+
+    // Traverse root
+   
+
+    // Traverse right
+    preorder(root->right);
+  }
+}
+
+
+// Insert a node in BST
+struct node *insert(struct node *node, int key) {
+  // Return a new node if the tree is empty
+  if (node == NULL) return newNode(key);
+
+  // Traverse to the right place and insert the node
+  if (key < node->key)
+    node->left = insert(node->left, key);
+  else
+    node->right = insert(node->right, key);
+
+  return node;
+}
+
+// Find the inorder successor
+struct node *minValueNode(struct node *node) {
+  struct node *current = node;
+
+  // Find the leftmost leaf
+  while (current && current->left != NULL)
+    current = current->left;
+
+  return current;
+}
+
+// Deleting a node
+struct node *deleteNode(struct node *root, int key) {
+  // Return if the tree is empty
+  if (root == NULL) return root;
+
+  // Find the node to be deleted
+  if (key < root->key)
+    root->left = deleteNode(root->left, key);
+  else if (key > root->key)
+    root->right = deleteNode(root->right, key);
+
+  else {
+    // If the node is with only one child or no child
+    if (root->left == NULL) {
+      struct node *temp = root->right;
+      free(root);
+      return temp;
+    } else if (root->right == NULL) {
+      struct node *temp = root->left;
+      free(root);
+      return temp;
+    }
+
+    // If the node has two children
+    struct node *temp = minValueNode(root->right);
+
+    // Place the inorder successor in position of the node to be deleted
+    root->key = temp->key;
+
+    // Delete the inorder successor
+    root->right = deleteNode(root->right, temp->key);
+  }
+  return root;
+}
+
+// Driver code
+int main() {
+  struct node *root = NULL;
+  int n,data;
+  printf("Enter how many nodes you want to insert in BST :");
+  scanf("%d",&n);
+  for( int i =0 ; i < n ; i++){
+      printf("Enter the value: ");
+      scanf("%d", &data);
+       root = insert(root, data);
+      
+      
+  }
+
+  printf("Inorder traversal(Always gives ascending order): ");
+  inorder(root);
+  printf("\nPreorder traversal: ");
+   preorder(root);
+  printf("\nEnter the data to delete: ");
+  scanf("%d",&data);
+
+  printf("After deleting %d\n",data);
+  root = deleteNode(root, data);
+  printf("Inorder traversal: ");
+  inorder(root);
+  printf("\nPreorder traversal: ");
+  preorder(root);
+}
+
+
+
+
+34704 - Lab Work - Write a C program to implement Binary tree using Linked list
+
+Solution :-
+TreeMain.c
+
+// A tree node
+struct node
+{
+	int data;
+	struct node *right,*left;
+};
+
+// A queue node
+struct Queue
+{
+	int front, rear;
+	int size;
+	struct node* *array;
+};
+
+// A utility function to create a new tree node
+struct node* newNode(int data)
+{
+	struct node* temp = (struct node*) malloc(sizeof( struct node ));
+	temp->data = data;
+	temp->left = temp->right = NULL;
+	return temp;
+}
+
